@@ -5,6 +5,8 @@
   >
     <h1>editor</h1>
     <div>{{ user.uid }}</div>
+    <div>{{ user.displayName }}</div>
+    <div>{{ user.emailVerified }}</div>
     <button
       @click="onClickLogOut"
     >
@@ -27,15 +29,15 @@ export default {
       'user',
     ]),
   },
-  created() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    this.SET_USER(user);
+  mounted() {
+    this.FETCH_USER();
   },
   methods: {
     ...mapMutations([
       'SET_USER',
     ]),
     ...mapActions([
+      'FETCH_USER',
       'LOG_OUT_USER',
     ]),
     onClickLogOut() {

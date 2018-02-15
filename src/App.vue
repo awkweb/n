@@ -15,6 +15,7 @@ export default {
 
 <style lang="scss">
   @import 'assets/styles/variables';
+  @import 'assets/styles/functions';
   @import 'assets/styles/fonts';
 
   *,
@@ -25,6 +26,7 @@ export default {
   html {
     background-color: color(white);
     box-sizing: border-box;
+    color: color(black);
     font: {
       family: $font-sans-serif;
       size: $font-base-size;

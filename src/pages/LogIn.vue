@@ -3,6 +3,12 @@
     <div class="auth__container">
       <h1 class="auth__title">Log In</h1>
       <form>
+        <div
+          v-if="error"
+          class="auth__message"
+        >
+          {{ error.message }}
+        </div>
         <div class="auth__field">
           <label class="auth__label">Email Address</label>
           <input
@@ -10,6 +16,7 @@
             v-focus
             class="auth__input"
             placeholder="erlich@aviato.com"
+            spellcheck="false"
             type="text"
           >
         </div>
@@ -19,6 +26,7 @@
             @click.prevent="onClickToggleShowPassword"
             class="auth__button-show-password"
             tabindex="-1"
+            type="button"
           >
             {{ showPassword ? 'Hide' : 'Show' }}
           </button>
@@ -27,6 +35,7 @@
             :type="showPassword ? 'text' : 'password'"
             class="auth__input"
             placeholder="Super, secret"
+            spellcheck="false"
           >
         </div>
         <button
@@ -35,7 +44,7 @@
           @keyup.enter="onClickLogIn"
           :class="['auth__button', { 'loading': loading }]"
         >
-          {{ loading ? 'Logging in...' : 'Log In' }}
+          {{ loading ? 'Logging In...' : 'Log In' }}
         </button>
       </form>
 
@@ -43,6 +52,12 @@
         Need a Notational account?
         <router-link :to="{ name: 'SignUp', query: { email: this.email }}">
           Create an account
+        </router-link>
+      </div>
+
+      <div class="auth__help">
+        <router-link :to="{ name: 'ResetPassword', query: { email: this.email }}">
+          Reset your password
         </router-link>
       </div>
     </div>
@@ -62,6 +77,7 @@ export default {
   data: () => ({
     email: null,
     error: null,
+    loading: false,
     password: null,
     showPassword: false,
   }),

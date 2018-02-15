@@ -3,13 +3,30 @@
     <div class="auth__container">
       <h1 class="auth__title">Sign Up</h1>
       <form>
+        <div
+          v-if="error"
+          class="auth__message"
+        >
+          {{ error.message }}
+        </div>
+        <div class="auth__field">
+          <label class="auth__label">Full Name</label>
+          <input
+            v-model="displayName"
+            v-focus
+            :class="['auth__input', { 'success': !$v.displayName.$invalid }]"
+            placeholder="Gavin Belson"
+            spellcheck="false"
+            type="text"
+          >
+        </div>
         <div class="auth__field">
           <label class="auth__label">Email Address</label>
           <input
             v-model="email"
-            v-focus
             :class="['auth__input', { 'success': !$v.email.$invalid }]"
             placeholder="gavin@hooli.xyz"
+            spellcheck="false"
             type="text"
           >
         </div>
@@ -22,15 +39,6 @@
             type="password"
           >
         </div>
-        <div class="auth__field">
-          <label class="auth__label">Confirm Password</label>
-          <input
-            v-model="confirmPassword"
-            :class="['auth__input', { 'success': !$v.confirmPassword.$invalid }]"
-            placeholder="You know the drill"
-            type="password"
-          >
-        </div>
 
         <button
           :disabled="$v.validationGroup.$invalid"
@@ -38,7 +46,7 @@
           @keyup.enter="onClickSignUp"
           :class="['auth__button', { 'loading': loading }]"
         >
-          {{ loading ? 'Creating account...' : 'Get Started!' }}
+          {{ loading ? 'Creating account...' : 'Sign Up' }}
         </button>
       </form>
 
@@ -58,15 +66,16 @@ import {
   email,
   minLength,
   required,
-  sameAs,
 } from 'vuelidate/lib/validators';
 
 export default {
   name: 'SignUp',
   data: () => ({
+    displayName: null,
     email: null,
+    error: null,
+    loading: false,
     password: null,
-    confirmPassword: null,
   }),
   created() {
     if (this.$route.query.email) this.email = this.$route.query.email;
@@ -79,6 +88,7 @@ export default {
       this.loading = true;
       this
         .SIGN_UP_USER({
+          displayName: this.displayName,
           email: this.email,
           password: this.password,
         })
@@ -90,6 +100,10 @@ export default {
     },
   },
   validations: {
+    displayName: {
+      required,
+      minLength: minLength(2),
+    },
     email: {
       required,
       email,
@@ -98,14 +112,10 @@ export default {
       required,
       minLength: minLength(6),
     },
-    confirmPassword: {
-      required,
-      sameAsPassword: sameAs('password'),
-    },
     validationGroup: [
+      'displayName',
       'email',
       'password',
-      'confirmPassword',
     ],
   },
   metaInfo: {

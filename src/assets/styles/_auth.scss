@@ -26,6 +26,19 @@
     top: 0;
   }
 }
+.auth__message {
+  background-color: #f2d2ca;
+  border-radius: 4px;
+  color: color(black);
+  font: {
+    family: $font-sans-serif;
+    size: .8rem;
+    weight: 400;
+  }
+  margin-bottom: 1rem;
+  padding: .75rem 1rem;
+  &.success { background-color: #d9ebe6; }
+}
 .auth__field {
   @include flex-column;
   position: relative;
@@ -70,7 +83,6 @@
     size: .9rem;
     weight: 400;
   }
-  height: 100%;
   outline: none;
   padding: {
     bottom: .35rem;
@@ -88,7 +100,7 @@
   &.success {
     background: {
       image: url('../assets/icons/input-success.svg');
-      position: right .55rem top 1rem;
+      position: right .55rem center;
       repeat: no-repeat;
       size: auto;
     };
@@ -133,6 +145,14 @@
     opacity: .65;
     pointer-events: none;
   }
+  &.link {
+    @include flex-row;
+    @include flex-center;
+    text: {
+      align: center;
+      decoration: none;
+    }
+  }
 }
 .auth__help {
   color: color(gray, copy);
@@ -144,5 +164,14 @@
   a {
     color: color(gray, copy);
     font-weight: 500;
+    white-space: nowrap;
   }
+  &:last-child { margin-top: .5rem; }
+}
+.auth__instructions {
+  font: {
+    family: $font-sans-serif;
+    size: .9rem;
+  }
+  margin-bottom: 1rem;
 }
