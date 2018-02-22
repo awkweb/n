@@ -72,8 +72,8 @@ export default {
     height: 2.5rem;
     outline: none;
     padding: {
-      left: .75rem;
-      right: .75rem;
+      left: .65rem;
+      right: .65rem;
     }
     transition: {
       property: border-color;

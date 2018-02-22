@@ -7,8 +7,10 @@
       class="editor__container"
     >
       <EditorSearch
+        :activeNoteId="activeNoteId"
         :notes="notes"
         :query="query"
+        @handleOnClickSelectResult="handleOnClickSelectResult"
         @handleOnInputUpdateQuery="handleOnInputUpdateQuery"
       />
       <button
@@ -35,11 +37,15 @@ export default {
   },
   computed: {
     ...mapGetters([
+      'activeNote',
       'notes',
       'theme',
       'query',
       'user',
     ]),
+    activeNoteId() {
+      return this.activeNote ? this.activeNote.id : -1;
+    },
   },
   mounted() {
     this.FETCH_USER();
@@ -51,6 +57,7 @@ export default {
   },
   methods: {
     ...mapMutations([
+      'SET_ACTIVE_NOTE',
       'SET_QUERY',
       'SET_USER',
     ]),
@@ -59,6 +66,10 @@ export default {
       'LOG_OUT_USER',
       'FETCH_USER_DATA',
     ]),
+    handleOnClickSelectResult(noteId) {
+      const nextActiveNote = this.notes.find(note => note.id === noteId);
+      this.SET_ACTIVE_NOTE(nextActiveNote);
+    },
     handleOnInputUpdateQuery(query) {
       this.SET_QUERY(query);
     },

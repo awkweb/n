@@ -1,14 +1,15 @@
 import api from '@/api';
 import {
   INIT_EDITOR,
-  SET_NOTES,
+  SET_ACTIVE_NOTE,
   SET_THEME,
   SET_QUERY,
 } from '@/store/constants';
 
 const store = {
   state: {
-    notes: {},
+    activeNote: null,
+    notes: [],
     theme: 'light',
     query: '',
   },
@@ -20,11 +21,17 @@ const store = {
   },
   mutations: {
     [INIT_EDITOR](state, data) {
-      state.notes = data.notes;
+      state.notes = Object
+        .keys(data.notes)
+        .map((key) => {
+          const note = data.notes[key];
+          note.key = key;
+          return note;
+        });
       state.theme = data.theme;
     },
-    [SET_NOTES](state, notes) {
-      state.notes = notes;
+    [SET_ACTIVE_NOTE](state, note) {
+      state.activeNote = note;
     },
     [SET_THEME](state, theme) {
       state.theme = theme;
@@ -34,6 +41,7 @@ const store = {
     },
   },
   getters: {
+    activeNote: state => state.activeNote,
     notes: state => state.notes,
     theme: state => state.theme,
     query: state => state.query,

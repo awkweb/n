@@ -5,13 +5,18 @@
       @handleOnInputUpdateQuery="handleOnInputUpdateQuery"
     />
     <EditorSearchInfo
-      :note-count="noteCount"
+      :note-count="notes.length"
     />
     <ul class="editor-search__results">
       <EditorSearchResult
         v-for="note in notes"
         :key="note.id"
+        :active="note.id === activeNoteId"
+        :body="note.body"
+        :dateModified="note.date_modified"
+        :id="note.id"
         :name="note.name"
+        @handleOnClickSelectResult="handleOnClickSelectResult"
       />
     </ul>
   </div>
@@ -30,8 +35,12 @@ export default {
     EditorSearchResult,
   },
   props: {
+    activeNoteId: {
+      type: Number,
+      required: true,
+    },
     notes: {
-      type: Object,
+      type: Array,
       required: true,
     },
     query: {
@@ -39,12 +48,10 @@ export default {
       required: true,
     },
   },
-  computed: {
-    noteCount() {
-      return Object.keys(this.notes).length;
-    },
-  },
   methods: {
+    handleOnClickSelectResult(noteId) {
+      this.$emit('handleOnClickSelectResult', noteId);
+    },
     handleOnInputUpdateQuery(query) {
       this.$emit('handleOnInputUpdateQuery', query);
     },
@@ -58,7 +65,13 @@ export default {
   @import '../../assets/styles/mixins';
 
   .editor-search__results {
-    margin: 0;
+    height: 7rem;
+    list-style-type: none;
+    margin: {
+      bottom: .5rem;
+      top: 0;
+    };
+    overflow-y: auto;
     padding-left: 0;
   }
 </style>
