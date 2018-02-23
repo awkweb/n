@@ -3,14 +3,14 @@
     <input
       v-focus
       v-bind:value="query"
-      @blur="isSearchFocused = false"
-      @focus="isSearchFocused = true"
+      @blur="onBlur"
+      @focus="onFocus"
       @input="onInputUpdateQuery($event.target.value)"
       @keyup.enter="onKeyupSearch"
       autofocus
       class="editor-search-field__input"
       placeholder="Search or create"
-      ref="input"
+      ref="Input"
       spellcheck="false"
       type="text"
     >
@@ -34,10 +34,13 @@ export default {
       required: true,
     },
   },
-  data: () => ({
-    isSearchFocused: true,
-  }),
   methods: {
+    onBlur() {
+      this.$emit('handleOnBlur');
+    },
+    onFocus() {
+      this.$emit('handleOnFocus');
+    },
     onInputUpdateQuery(query) {
       this.$emit('handleOnInputUpdateQuery', query);
     },

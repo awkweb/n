@@ -9,7 +9,7 @@
       <span class="editor-search-result__body">{{ body }}</span>
     </span>
 
-    <span>{{ dateModified | prettyDate }}</span>
+    <time class="editor-search-result__time">{{ dateModified | prettyDate }}</time>
   </li>
 </template>
 
@@ -64,11 +64,11 @@ export default {
     align-items: center;
     cursor: pointer;
     font-size: .85rem;
-    height: 1.7rem;
+    height: 31px;
     justify-content: space-between;
     padding: {
-      left: .5rem;
-      right: .5rem;
+      left: .35rem;
+      right: .35rem;
     }
     &.active { background-color: color(gray, highlight); }
     span { white-space: nowrap; }
@@ -79,5 +79,9 @@ export default {
   }
   .editor-search-result__body {
     color: color(gray, copy);
+  }
+  .editor-search-result__time {
+    padding-left: .35rem;
+    white-space: nowrap;
   }
 </style>

@@ -1,11 +1,25 @@
 <template>
   <div class="editor-search-info">
     <div class="editor-search-info__note-count">
-      {{ noteCount }} {{ noteCount > 1 ? 'notes' : 'note' }}
+      <span class="mono">{{ resultCount }}</span> {{ resultCount > 1 ? 'notes' : 'note' }}
     </div>
 
     <div class="editor-search-info__help">
-      Type to search
+      <template v-if="editing || !searching">
+        <span class="mono">Esc</span> to focus search
+      </template>
+      <template v-else-if="renaming">
+        <span class="mono">Enter</span> to save title
+      </template>
+      <template v-else-if="queryLength > 0">
+        <span class="mono">Ctrl</span> + <span class="mono">Enter</span> to create note
+      </template>
+      <template v-else-if="selected">
+        <span class="mono">Enter</span> to edit note
+      </template>
+      <template v-else>
+        Type to search
+      </template>
     </div>
   </div>
 </template>
@@ -14,8 +28,28 @@
 export default {
   name: 'EditorSearchInfo',
   props: {
-    noteCount: {
+    editing: {
+      type: Boolean,
+      required: true,
+    },
+    queryLength: {
       type: Number,
+      required: true,
+    },
+    renaming: {
+      type: Boolean,
+      required: true,
+    },
+    resultCount: {
+      type: Number,
+      required: true,
+    },
+    searching: {
+      type: Boolean,
+      required: true,
+    },
+    selected: {
+      type: Boolean,
       required: true,
     },
   },
@@ -29,16 +63,26 @@ export default {
 
   .editor-search-info {
     @include flex-row;
-    justify-content: space-between;
-    padding: {
-      left: .5rem;
-      top: .35rem;
-      right: .5rem;
-    }
-  }
-  .editor-search-info__note-count,
-  .editor-search-info__help {
     color: color(gray, copy);
     font-size: .7rem;
+    justify-content: space-between;
+    padding: {
+      bottom: .25rem;
+      left: .35rem;
+      top: .35rem;
+      right: .35rem;
+    }
+  }
+  .editor-search-info__help {
+    .mono {
+      background-color: color(gray, highlight);
+      color: color(black);
+    }
+  }
+  .mono {
+    font: {
+      family: $font-mono;
+      size: .65rem;
+    }
   }
 </style>

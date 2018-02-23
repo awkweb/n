@@ -2,12 +2,23 @@
   <div class="editor-search">
     <EditorSearchField
       :query="query"
+      @handleOnBlur="handleOnBlur"
+      @handleOnFocus="handleOnFocus"
       @handleOnInputUpdateQuery="handleOnInputUpdateQuery"
+      ref="EditorSearchField"
     />
     <EditorSearchInfo
-      :note-count="notes.length"
+      :editing="editingId != null"
+      :renaming="renamingId != null"
+      :resultCount="notes.length"
+      :searching="isSearchFocused"
+      :selected="activeNoteId !== -1"
+      :queryLength="query.length"
     />
-    <ul class="editor-search__results">
+    <ul
+      class="editor-search__results"
+      ref="EditorSearchResults"
+    >
       <EditorSearchResult
         v-for="note in notes"
         :key="note.id"
@@ -16,6 +27,7 @@
         :dateModified="note.date_modified"
         :id="note.id"
         :name="note.name"
+        :ref="`EditorSearchResult${note.id}`"
         @handleOnClickSelectResult="handleOnClickSelectResult"
       />
     </ul>
@@ -39,6 +51,9 @@ export default {
       type: Number,
       required: true,
     },
+    editingId: {
+      type: Number,
+    },
     notes: {
       type: Array,
       required: true,
@@ -47,10 +62,22 @@ export default {
       type: String,
       required: true,
     },
+    renamingId: {
+      type: Number,
+    },
   },
+  data: () => ({
+    isSearchFocused: true,
+  }),
   methods: {
+    handleOnBlur() {
+      this.isSearchFocused = false;
+    },
     handleOnClickSelectResult(noteId) {
       this.$emit('handleOnClickSelectResult', noteId);
+    },
+    handleOnFocus() {
+      this.isSearchFocused = true;
     },
     handleOnInputUpdateQuery(query) {
       this.$emit('handleOnInputUpdateQuery', query);
@@ -65,7 +92,7 @@ export default {
   @import '../../assets/styles/mixins';
 
   .editor-search__results {
-    height: 7rem;
+    height: 9rem;
     list-style-type: none;
     margin: {
       bottom: .5rem;

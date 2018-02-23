@@ -6,3 +6,4 @@ export const SET_ACTIVE_NOTE = 'SET_ACTIVE_NOTE';
 export const SET_NOTES = 'SET_NOTES';
 export const SET_THEME = 'SET_THEME';
 export const SET_QUERY = 'SET_QUERY';
+export const SET_RESULT_INDEX = 'SET_RESULT_INDEX';

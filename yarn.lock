@@ -3899,6 +3899,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+keyboardjs@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/keyboardjs/-/keyboardjs-2.4.1.tgz#7c5ad28695a21b6c4d066681c127376a60f9acd1"
+
 killable@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.0.tgz#da8b84bd47de5395878f95d64d02f2449fe05e6b"
@@ -6247,6 +6251,10 @@ string_decoder@^1.0.0, string_decoder@~1.0.3:
 string_decoder@~0.10.x:
   version "0.10.31"
   resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-0.10.31.tgz#62e203bc41766c6c28c9fc84301dab1c5310fa94"
+
+string_score@^0.1.22:
+  version "0.1.22"
+  resolved "https://registry.yarnpkg.com/string_score/-/string_score-0.1.22.tgz#80e112223aeef30969d8502f38db72a768eaa8fd"
 
 stringstream@~0.0.4, stringstream@~0.0.5:
   version "0.0.5"
