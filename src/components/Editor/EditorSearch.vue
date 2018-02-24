@@ -8,8 +8,8 @@
       ref="EditorSearchField"
     />
     <EditorSearchInfo
-      :editing="editingId != null"
-      :renaming="renamingId != null"
+      :editing="editingId !== null"
+      :renaming="renamingId !== null"
       :resultCount="notes.length"
       :searching="isSearchFocused"
       :selected="activeNoteId !== -1"
@@ -28,7 +28,11 @@
         :id="note.id"
         :name="note.name"
         :ref="`EditorSearchResult${note.id}`"
+        :renaming="note.id === renamingId"
+        @handleOnBlurRename="handleOnBlurRename"
+        @handleOnClickFocusRename="handleOnClickFocusRename"
         @handleOnClickSelectResult="handleOnClickSelectResult"
+        @handleOnKeyupEnterRename="handleOnKeyupEnterRename"
       />
     </ul>
   </div>
@@ -73,6 +77,12 @@ export default {
     handleOnBlur() {
       this.isSearchFocused = false;
     },
+    handleOnBlurRename() {
+      this.$emit('handleOnBlurRename');
+    },
+    handleOnClickFocusRename(noteId) {
+      this.$emit('handleOnClickFocusRename', noteId);
+    },
     handleOnClickSelectResult(noteId) {
       this.$emit('handleOnClickSelectResult', noteId);
     },
@@ -81,6 +91,9 @@ export default {
     },
     handleOnInputUpdateQuery(query) {
       this.$emit('handleOnInputUpdateQuery', query);
+    },
+    handleOnKeyupEnterRename(newName) {
+      this.$emit('handleOnKeyupEnterRename', newName);
     },
   },
 };

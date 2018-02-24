@@ -89,6 +89,7 @@ export default {
   }
   .editor-search-field__icon {
     height: 25px;
+    pointer-events: none;
     position: absolute;
     right: .55rem;
     top: .55rem;

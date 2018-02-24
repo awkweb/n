@@ -12,10 +12,20 @@
         :notes="filteredNotes"
         :query="query"
         :renamingId="renamingId"
+        @handleOnBlurRename="handleOnBlurRename"
+        @handleOnClickFocusRename="handleOnClickFocusRename"
         @handleOnClickSelectResult="handleOnClickSelectResult"
         @handleOnInputUpdateQuery="handleOnInputUpdateQuery"
+        @handleOnKeyupEnterRename="handleOnKeyupEnterRename"
         ref="EditorSearch"
       />
+
+      <div
+        v-if="activeNote"
+      >
+        {{ activeNote.body }}
+      </div>
+
       <button
         @click="onClickLogOut"
       >
@@ -82,6 +92,7 @@ export default {
     ...mapMutations([
       'SET_ACTIVE_NOTE',
       'SET_QUERY',
+      'SET_RENAMING_ID',
       'SET_RESULT_INDEX',
       'SET_USER',
     ]),
@@ -90,7 +101,19 @@ export default {
       'FETCH_USER_DATA',
       'LOG_OUT_USER',
       'RESET_ACTIVE_NOTE',
+      'UPDATE_NOTE',
     ]),
+    handleOnBlurRename() {
+      this.SET_RENAMING_ID(null);
+      this
+        .$refs.EditorSearch
+        .$refs.EditorSearchField
+        .$refs.Input
+        .focus();
+    },
+    handleOnClickFocusRename(noteId) {
+      this.SET_RENAMING_ID(noteId);
+    },
     handleOnClickSelectResult(noteId) {
       const nextActiveNote = this.notes.find(note => note.id === noteId);
       this.SET_ACTIVE_NOTE(nextActiveNote);
@@ -108,6 +131,12 @@ export default {
       }
       this.SET_ACTIVE_NOTE(note);
       this.SET_RESULT_INDEX(resultIndex);
+    },
+    handleOnKeyupEnterRename(newName) {
+      const newNote = Object.assign(this.activeNote, { name: newName });
+      this
+        .UPDATE_NOTE(newNote)
+        .then(() => this.handleOnBlurRename());
     },
     onClickLogOut() {
       this

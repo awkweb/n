@@ -5,11 +5,11 @@
     </div>
 
     <div class="editor-search-info__help">
-      <template v-if="editing || !searching">
-        <span class="mono">Esc</span> to focus search
+      <template v-if="renaming">
+        <span class="mono">Enter</span> to save name
       </template>
-      <template v-else-if="renaming">
-        <span class="mono">Enter</span> to save title
+      <template v-else-if="editing || !searching">
+        <span class="mono">Esc</span> to focus search
       </template>
       <template v-else-if="queryLength > 0">
         <span class="mono">Ctrl</span> + <span class="mono">Enter</span> to create note

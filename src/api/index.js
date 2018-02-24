@@ -31,4 +31,15 @@ export default {
         .ref(`users/${userId}`)
         .once('value')
         .then(res => resolve(res.val()))),
+  updateNote: (userId, key, dateModified, note) =>
+    new Promise(resolve =>
+      firebase
+        .database()
+        .ref(`users/${userId}/notes/${key}`)
+        .update({
+          name: note.name,
+          body: note.body,
+          date_modified: dateModified,
+        })
+        .then(() => resolve({ key, date_modified: dateModified }))),
 };
