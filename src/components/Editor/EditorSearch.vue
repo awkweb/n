@@ -20,12 +20,13 @@
       ref="EditorSearchResults"
     >
       <EditorSearchResult
-        v-for="note in notes"
+        v-for="(note, index) in notes"
         :key="note.id"
         :active="note.id === activeNoteId"
         :body="note.body"
         :dateModified="note.date_modified"
         :id="note.id"
+        :index="index"
         :name="note.name"
         :ref="`EditorSearchResult${note.id}`"
         :renaming="note.id === renamingId"
@@ -83,8 +84,8 @@ export default {
     handleOnClickFocusRename(noteId) {
       this.$emit('handleOnClickFocusRename', noteId);
     },
-    handleOnClickSelectResult(noteId) {
-      this.$emit('handleOnClickSelectResult', noteId);
+    handleOnClickSelectResult(index) {
+      this.$emit('handleOnClickSelectResult', index);
     },
     handleOnFocus() {
       this.isSearchFocused = true;

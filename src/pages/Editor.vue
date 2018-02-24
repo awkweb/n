@@ -19,13 +19,20 @@
         @handleOnKeyupEnterRename="handleOnKeyupEnterRename"
         ref="EditorSearch"
       />
-
       <div
         v-if="activeNote"
+        v-html="activeNote.body"
+        class="editor__body"
       >
-        {{ activeNote.body }}
       </div>
-
+      <div
+        v-else
+        class="editor__body"
+      >
+      </div>
+      <EditorFooter
+        :activeNote="activeNote"
+      />
       <button
         @click="onClickLogOut"
       >
@@ -42,6 +49,7 @@ import {
   mapMutations,
 } from 'vuex';
 import keyboard from 'keyboardjs';
+import EditorFooter from '@/components/Editor/EditorFooter';
 import EditorSearch from '@/components/Editor/EditorSearch';
 import { noteMixin } from '@/mixins';
 
@@ -51,6 +59,7 @@ export default {
     noteMixin,
   ],
   components: {
+    EditorFooter,
     EditorSearch,
   },
   computed: {
@@ -114,9 +123,10 @@ export default {
     handleOnClickFocusRename(noteId) {
       this.SET_RENAMING_ID(noteId);
     },
-    handleOnClickSelectResult(noteId) {
-      const nextActiveNote = this.notes.find(note => note.id === noteId);
+    handleOnClickSelectResult(index) {
+      const nextActiveNote = this.notes[index];
       this.SET_ACTIVE_NOTE(nextActiveNote);
+      this.SET_RESULT_INDEX(index);
     },
     handleOnInputUpdateQuery(query) {
       this.SET_QUERY(query);
@@ -222,5 +232,36 @@ export default {
       right: 1rem;
       top: 2rem;
     }
+  }
+  .editor__body {
+    background-color: color(white);
+    border: {
+      color: color(gray, border);
+      style: solid;
+      width: 1px;
+    }
+    border-left: 0;
+    border-right: 0;
+    font: {
+      family: $font-sans-serif;
+      size: .9rem;
+      weight: 400;
+    }
+    max-height: 16rem;
+    min-height: 16rem;
+    overflow: scroll;
+    transition: {
+      property: border-color;
+      duration: $transition-duration;
+    }
+    padding: {
+      bottom: .75rem;
+      left: .5rem;
+      right: .5rem;
+      top: .75rem;
+    }
+    width: 100%;
+    word-wrap: break-word;
+    &:hover { border-color: color(gray, border-hover); }
   }
 </style>

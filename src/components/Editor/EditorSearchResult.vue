@@ -46,6 +46,10 @@ export default {
       type: Number,
       required: true,
     },
+    index: {
+      type: Number,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -71,7 +75,7 @@ export default {
       this.$emit('handleOnClickFocusRename', this.id);
     },
     onClickSelectResult() {
-      this.$emit('handleOnClickSelectResult', this.id);
+      this.$emit('handleOnClickSelectResult', this.index);
     },
     onKeyupEnterRename() {
       if (this.newName !== this.name) {
@@ -100,13 +104,16 @@ export default {
     align-items: center;
     cursor: pointer;
     font-size: .85rem;
-    height: 31px;
+    height: 32px;
     justify-content: space-between;
     padding: {
       left: .35rem;
       right: .35rem;
     }
-    &.active { background-color: color(gray, highlight); }
+    &.active {
+      background-color: color(gray, highlight);
+      border-radius: 2px;
+    }
     span { white-space: nowrap; }
   }
   .editor-search-result__info {
