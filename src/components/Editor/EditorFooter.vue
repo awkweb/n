@@ -4,7 +4,7 @@
       v-if="activeNote"
       class="editor-footer__details"
     >
-      {{ activeNote.body | wordCount }} words
+      {{ activeNote.body | wordCount }} words ·
       {{ activeNote.body | charCount }} chars
     </div>
     <div
@@ -14,6 +14,7 @@
       This is your moment of glory.
     </div>
     <div class="editor-footer__actions">
+      delete, rename, new, toggle theme
     </div>
   </div>
 </template>
@@ -45,6 +46,13 @@ export default {
 
   .editor-footer {
     @include flex-row;
+    color: color(gray, copy);
+    font-size: .75rem;
     justify-content: space-between;
+    padding: {
+      left: .35rem;
+      right: .35rem;
+      top: .65rem;
+    }
   }
 </style>

@@ -6,6 +6,21 @@
     <div
       class="editor__container"
     >
+      <div class="editor__header">
+        <div>
+          <button
+            class="editor__header-button"
+          >
+            Settings
+          </button>
+          <button
+            @click="onClickLogOut"
+            class="editor__header-button"
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
       <EditorSearch
         :activeNoteId="activeNoteId"
         :editingId="editingId"
@@ -33,11 +48,6 @@
       <EditorFooter
         :activeNote="activeNote"
       />
-      <button
-        @click="onClickLogOut"
-      >
-        Log Out
-      </button>
     </div>
   </div>
 </template>
@@ -195,7 +205,7 @@ export default {
         .$refs.EditorSearch
         .$refs[`EditorSearchResult${noteId}`][0]
         .$el;
-      const elementTop = element.offsetTop - ((element.clientHeight * 3.5) + 1);
+      const elementTop = element.offsetTop - ((element.clientHeight * 3.75) + 1);
       const elementBottom = elementTop + element.offsetHeight;
       const isVisible = (elementBottom <= containerViewBottom) && (elementTop >= containerViewTop);
       if (!isVisible) {
@@ -230,13 +240,42 @@ export default {
       bottom: 1rem;
       left: 1rem;
       right: 1rem;
-      top: 2rem;
+      top: .5rem;
     }
+  }
+  .editor__header {
+    @include flex-row;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: .25rem;
+    opacity: .35;
+    transition: {
+      property: opacity;
+      duration: $transition-duration;
+    }
+    &:hover { opacity: 1; }
+  }
+  .editor__header-button {
+    @include button;
+    border: 0;
+    color: color(gray, copy);
+    font: {
+      family: $font-sans-serif;
+      size: .7rem;
+    }
+    margin-right: .25rem;
+    padding: 0;
+    transition: {
+      property: color;
+      duration: $transition-duration;
+    }
+    &:hover { color: color(orange); }
+    &:last-child { margin-right: 0; }
   }
   .editor__body {
     background-color: color(white);
     border: {
-      color: color(gray, border);
+      color: color(gray);
       style: solid;
       width: 1px;
     }
@@ -247,21 +286,16 @@ export default {
       size: .9rem;
       weight: 400;
     }
-    max-height: 16rem;
-    min-height: 16rem;
+    max-height: 20rem;
+    min-height: 20rem;
     overflow: scroll;
-    transition: {
-      property: border-color;
-      duration: $transition-duration;
-    }
     padding: {
       bottom: .75rem;
       left: .5rem;
       right: .5rem;
-      top: .75rem;
+      top: .5rem;
     }
     width: 100%;
     word-wrap: break-word;
-    &:hover { border-color: color(gray, border-hover); }
   }
 </style>
