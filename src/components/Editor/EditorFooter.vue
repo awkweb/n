@@ -14,22 +14,46 @@
       This is your moment of glory.
     </div>
     <div class="editor-footer__actions">
-      delete, rename, new, toggle theme
+      <template v-if="activeNote">
+        <button
+          class="editor-footer__button"
+        >
+          <DeleteIcon class="editor-footer__button-icon" />
+        </button>
+        <button
+          class="editor-footer__button"
+        >
+          <EditIcon class="editor-footer__button-icon" />
+        </button>
+      </template>
+
+      <button
+        class="editor-footer__button"
+      >
+        <NewIcon class="editor-footer__button-icon" />
+      </button>
+      <button
+        class="editor-footer__button"
+      >
+        <ThemeIcon class="editor-footer__button-icon" />
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import EditorSearchField from '@/components/Editor/EditorSearchField';
-import EditorSearchInfo from '@/components/Editor/EditorSearchInfo';
-import EditorSearchResult from '@/components/Editor/EditorSearchResult';
+import DeleteIcon from '@/assets/icons/trash.svg';
+import EditIcon from '@/assets/icons/edit.svg';
+import NewIcon from '@/assets/icons/plus.svg';
+import ThemeIcon from '@/assets/icons/eye.svg';
 
 export default {
   name: 'EditorFooter',
   components: {
-    EditorSearchField,
-    EditorSearchInfo,
-    EditorSearchResult,
+    DeleteIcon,
+    EditIcon,
+    NewIcon,
+    ThemeIcon,
   },
   props: {
     activeNote: {
@@ -53,6 +77,45 @@ export default {
       left: .35rem;
       right: .35rem;
       top: .65rem;
+    }
+  }
+  .editor-footer__details {
+    @include flex-row;
+    align-items: center;
+  }
+  .editor-footer__actions {
+    @include flex-row;
+  }
+  .editor-footer__button {
+    @include button;
+    background-color: color(white);
+    border: {
+      color: color(gray);
+      radius: 2px;
+      style: solid;
+      width: 1px;
+    }
+    height: 1.5rem;
+    margin-right: 6px;
+    padding: 0;
+    transition: {
+      property: border-color;
+      duration: $transition-duration;
+    }
+    width: 1.5rem;
+    &:hover {
+      border-color: color(gray, border-hover);
+      .editor-footer__button-icon { fill: color(black); }
+    }
+    &:last-child { margin-right: 0; }
+  }
+  .editor-footer__button-icon {
+    fill: color(gray, copy);
+    height: 25px;
+    pointer-events: none;
+    transition: {
+      property: fill;
+      duration: $transition-duration;
     }
   }
 </style>

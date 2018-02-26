@@ -88,6 +88,7 @@ export default {
     &::-webkit-input-placeholder { color: color(gray, copy); }
   }
   .editor-search-field__icon {
+    fill: color(black);
     height: 25px;
     pointer-events: none;
     position: absolute;
