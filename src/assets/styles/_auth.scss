@@ -29,7 +29,7 @@
 .auth__message {
   background-color: #f2d2ca;
   border-radius: 4px;
-  color: color(black);
+  color: color(light, font);
   font: {
     family: $font-sans-serif;
     size: .8rem;
@@ -58,7 +58,7 @@
   @include button;
   background-color: transparent;
   border: none;
-  color: color(gray, copy);
+  color: color(light, copy);
   font: {
     family: $font-sans-serif;
     size: .7rem;
@@ -70,9 +70,9 @@
   top: .35rem;
 }
 .auth__input {
-  background-color: color(white);
+  background-color: transparent;
   border: {
-    color: color(gray, border);
+    color: color(light, border);
     radius: 2px;
     style: solid;
     width: 1px;
@@ -94,9 +94,9 @@
     property: border-color;
     duration: $transition-duration;
   }
-  &:hover { border-color: color(gray, border-hover); }
-  &:focus { border-color: color(orange); }
-  &::-webkit-input-placeholder { color: color(gray, copy); }
+  &:hover { border-color: color(light, border-hover); }
+  &:focus { border-color: color(light, primary); }
+  &::-webkit-input-placeholder { color: color(light, copy); }
   &.success {
     background: {
       image: url('../assets/icons/input-success.svg');
@@ -108,15 +108,15 @@
 }
 .auth__button {
   @include button;
-  background-color: color(orange);
+  background-color: color(light, button-background);
   border: {
-    color: color(orange, border);
+    color: color(light, button-border);
     radius: 2px;
     style: solid;
     width: 1px;
   }
   box-shadow: $box-shadow;
-  color: color(white);
+  color: color(light, button-font);
   font: {
     family: $font-sans-serif;
     size: .9rem;
@@ -132,12 +132,12 @@
   }
   width: 100%;
   &:hover {
-    border-color: color(orange, border-hover);
+    border-color: color(light, border-hover);
     box-shadow: $box-shadow-button-hover;
     transform: translateY(-1px);
   }
   &:active {
-    background-color: color(orange, background-active);
+    background-color: color(light, background-active);
     box-shadow: none;
     transform: translateY(1px);
   }
@@ -155,14 +155,14 @@
   }
 }
 .auth__help {
-  color: color(gray, copy);
+  color: color(light, copy);
   font: {
     family: $font-sans-serif;
     size: .85rem;
   }
   text-align: center;
   a {
-    color: color(gray, copy);
+    color: color(light, copy);
     font-weight: 500;
     white-space: nowrap;
   }

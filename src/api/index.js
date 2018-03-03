@@ -42,4 +42,11 @@ export default {
           date_modified: dateModified,
         })
         .then(() => resolve({ key, date_modified: dateModified }))),
+  updateTheme: (userId, theme) =>
+    new Promise(resolve =>
+      firebase
+        .database()
+        .ref(`users/${userId}`)
+        .update({ theme })
+        .then(() => resolve(theme))),
 };

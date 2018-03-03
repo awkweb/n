@@ -30,9 +30,15 @@
 
 <script>
 import moment from 'moment';
+import DeleteIcon from '@/assets/icons/trash.svg';
+import EditIcon from '@/assets/icons/edit.svg';
 
 export default {
   name: 'EditorSearchResult',
+  components: {
+    DeleteIcon,
+    EditIcon,
+  },
   props: {
     active: {
       type: Boolean,
@@ -111,7 +117,7 @@ export default {
       right: .35rem;
     }
     &.active {
-      background-color: color(gray, highlight);
+      background-color: color(light, highlight);
       border-radius: 2px;
     }
     span { white-space: nowrap; }
@@ -121,7 +127,7 @@ export default {
     text-overflow: ellipsis;
   }
   .editor-search-result__body {
-    color: color(gray, copy);
+    color: color(light, copy);
   }
   .editor-search-result__time {
     padding-left: .35rem;
@@ -129,9 +135,9 @@ export default {
   }
   .editor-search-result__input {
     -webkit-appearance: none;
-    background-color: color(gray, highlight);
+    background-color: color(light, highlight);
     border: 0;
-    color: color(black);
+    color: color(light, font);
     flex: 1;
     font: {
       family: $font-sans-serif;
@@ -139,5 +145,14 @@ export default {
     }
     outline: 0;
     padding: 0;
+  }
+
+  .editor.dark {
+    .editor-search-result.active { background-color: color(dark, highlight); }
+    .editor-search-result__body { color: color(dark, copy); }
+    .editor-search-result__input {
+      background-color: color(dark, highlight);
+      color: color(dark, font);
+    }
   }
 </style>

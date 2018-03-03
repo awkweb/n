@@ -30,6 +30,7 @@
         :name="note.name"
         :ref="`EditorSearchResult${note.id}`"
         :renaming="note.id === renamingId"
+        :theme="theme"
         @handleOnBlurRename="handleOnBlurRename"
         @handleOnClickFocusRename="handleOnClickFocusRename"
         @handleOnClickSelectResult="handleOnClickSelectResult"
@@ -109,7 +110,7 @@ export default {
     height: 9rem;
     list-style-type: none;
     margin: {
-      bottom: .5rem;
+      bottom: .25rem;
       top: 0;
     };
     overflow-y: auto;

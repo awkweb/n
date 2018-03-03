@@ -59,14 +59,15 @@ export default {
     position: relative;
   }
   .editor-search-field__input {
-    background-color: color(white);
+    background-color: transparent;
     border: {
-      color: color(gray, border);
+      color: color(light, input-border);
       radius: 2px;
       style: solid;
       width: 1px;
     }
     box-shadow: $box-shadow;
+    color: color(light, font);
     font: {
       family: $font-sans-serif;
       size: .9rem;
@@ -79,20 +80,35 @@ export default {
       right: .65rem;
     }
     transition: {
-      property: border-color;
+      property: border-color, color;
       duration: $transition-duration;
     }
     width: 100%;
-    &:hover { border-color: color(gray, border-hover); }
-    &:focus { border-color: color(orange); }
-    &::-webkit-input-placeholder { color: color(gray, copy); }
+    &:hover { border-color: color(light, input-border-hover); }
+    &:focus { border-color: color(light, primary); }
+    &::-webkit-input-placeholder { color: color(light, copy); }
   }
   .editor-search-field__icon {
-    fill: color(black);
+    fill: color(light, font);
     height: 25px;
     pointer-events: none;
     position: absolute;
     right: .55rem;
     top: .55rem;
+    transition: {
+      duration: $transition-duration;
+      property: fill;
+    }
+  }
+
+  .editor.dark {
+    .editor-search-field__input {
+      border-color: color(dark, input-border);
+      color: color(dark, font);
+      &:hover { border-color: color(dark, input-border-hover); }
+      &:focus { border-color: color(dark, primary); }
+      &::-webkit-input-placeholder { color: color(dark, copy); }
+    }
+    .editor-search-field__icon { fill: color(dark, font); }
   }
 </style>

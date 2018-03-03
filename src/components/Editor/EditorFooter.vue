@@ -4,8 +4,8 @@
       v-if="activeNote"
       class="editor-footer__details"
     >
-      {{ activeNote.body | wordCount }} words ·
-      {{ activeNote.body | charCount }} chars
+      <span class="mono">{{ activeNote.body | wordCount }}</span> words ·
+      <span class="mono">{{ activeNote.body | charCount }}</span> chars
     </div>
     <div
       v-else
@@ -14,25 +14,13 @@
       This is your moment of glory.
     </div>
     <div class="editor-footer__actions">
-      <template v-if="activeNote">
-        <button
-          class="editor-footer__button"
-        >
-          <DeleteIcon class="editor-footer__button-icon" />
-        </button>
-        <button
-          class="editor-footer__button"
-        >
-          <EditIcon class="editor-footer__button-icon" />
-        </button>
-      </template>
-
       <button
         class="editor-footer__button"
       >
         <NewIcon class="editor-footer__button-icon" />
       </button>
       <button
+        @click="onClickToggleTheme"
         class="editor-footer__button"
       >
         <ThemeIcon class="editor-footer__button-icon" />
@@ -42,22 +30,23 @@
 </template>
 
 <script>
-import DeleteIcon from '@/assets/icons/trash.svg';
-import EditIcon from '@/assets/icons/edit.svg';
 import NewIcon from '@/assets/icons/plus.svg';
 import ThemeIcon from '@/assets/icons/eye.svg';
 
 export default {
   name: 'EditorFooter',
   components: {
-    DeleteIcon,
-    EditIcon,
     NewIcon,
     ThemeIcon,
   },
   props: {
     activeNote: {
       required: true,
+    },
+  },
+  methods: {
+    onClickToggleTheme() {
+      this.$emit('handleOnClickToggleTheme');
     },
   },
 };
@@ -70,7 +59,7 @@ export default {
 
   .editor-footer {
     @include flex-row;
-    color: color(gray, copy);
+    color: color(light, copy);
     font-size: .75rem;
     justify-content: space-between;
     padding: {
@@ -82,15 +71,23 @@ export default {
   .editor-footer__details {
     @include flex-row;
     align-items: center;
+    .mono {
+      font-family: $font-mono;
+      margin: {
+        left: .2rem;
+        right: .2rem;
+      }
+      &:first-child { margin-left: 0; }
+    }
   }
   .editor-footer__actions {
     @include flex-row;
   }
   .editor-footer__button {
     @include button;
-    background-color: color(white);
+    background-color: transparent;
     border: {
-      color: color(gray);
+      color: color(light, border);
       radius: 2px;
       style: solid;
       width: 1px;
@@ -104,13 +101,13 @@ export default {
     }
     width: 1.5rem;
     &:hover {
-      border-color: color(gray, border-hover);
-      .editor-footer__button-icon { fill: color(black); }
+      border-color: color(light, border-hover);
+      .editor-footer__button-icon { fill: color(light, font); }
     }
     &:last-child { margin-right: 0; }
   }
   .editor-footer__button-icon {
-    fill: color(gray, copy);
+    fill: color(light, copy);
     height: 25px;
     pointer-events: none;
     transition: {

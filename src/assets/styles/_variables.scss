@@ -1,24 +1,37 @@
 $box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-$box-shadow-button-hover: 0 7px 14px rgba(221,221,221,.1), 0 3px 6px rgba(0,0,0,.08);
-$colors: (
-  black: (
-    base: #1b2437,
+$box-shadow-button-hover:
+  0 7px 14px rgba(221,221,221,.1),
+  0 3px 6px rgba(0,0,0,.08);
+$blue: #0087F8;
+$orange: #ff5722;
+$themes: (
+  dark: (
+    background: #222222, //
+    button-background: $blue, //
+    button-background-active: #ad391a,
+    button-border: #dd4924,
+    button-border-hover: #ad391a,
+    button-font: #ffffff,
+    copy: #bcbcbc, //
+    font: #e6e6e6, //
+    input-border: #6f6f6f, //
+    input-border-hover: #898989, //
+    highlight: #363636, //
+    primary: $blue //
   ),
-  gray: (
-    base: #dddddd,
-    border: #c9c9c9,
-    border-hover: #a6a6a6,
+  light: (
+    background: #ffffff,
+    button-background: $orange,
+    button-background-active: #ad391a,
+    button-border: #dd4924,
+    button-border-hover: #ad391a,
+    button-font: #ffffff,
     copy: #7a8f9d,
+    font: #272727,
+    input-border: #c9c9c9,
+    input-border-hover: #a6a6a6,
     highlight: #efefef,
-  ),
-  orange: (
-    base: #ff5722,
-    background-active: #ad391a,
-    border: #dd4924,
-    border-hover: #ad391a
-  ),
-  white: (
-    base: #ffffff
+    primary: $orange
   )
 );
 $font-sans-serif: Avenir, sans-serif;

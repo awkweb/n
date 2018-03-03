@@ -36,6 +36,10 @@ const store = {
           const newNote = Object.assign(note, { date_modified: res.date_modified });
           commit(SET_NOTE, newNote);
         }),
+    UPDATE_THEME: ({ commit, rootState }, theme) =>
+      api
+        .updateTheme(rootState.auth.user.uid, theme)
+        .then(() => commit(SET_THEME, theme)),
   },
   mutations: {
     [INIT_EDITOR](state, data) {

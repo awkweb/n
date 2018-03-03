@@ -63,7 +63,7 @@ export default {
 
   .editor-search-info {
     @include flex-row;
-    color: color(gray, copy);
+    color: color(light, copy);
     font-size: .7rem;
     justify-content: space-between;
     padding: {
@@ -75,14 +75,24 @@ export default {
   }
   .editor-search-info__help {
     .mono {
-      background-color: color(gray, highlight);
-      color: color(black);
+      background-color: color(light, highlight);
+      color: color(light, font);
     }
   }
   .mono {
     font: {
       family: $font-mono;
       size: .65rem;
+    }
+  }
+
+  .editor.dark {
+    .editor-search-info { color: color(dark, copy); }
+    .editor-search-info__help {
+      .mono {
+        background-color: color(dark, highlight);
+        color: color(dark, font);
+      }
     }
   }
 </style>

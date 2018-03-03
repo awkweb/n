@@ -24,9 +24,7 @@ export default {
     box-sizing: inherit;
   }
   html {
-    background-color: color(white);
     box-sizing: border-box;
-    color: color(black);
     font: {
       family: $font-sans-serif;
       size: $font-base-size;
@@ -34,5 +32,18 @@ export default {
   }
   body {
     margin: 0;
+    min-height: 100vh;
+    transition: {
+      duration: $transition-duration;
+      property: background-color, color;
+    }
+    &.light {
+      background-color: color(light, background);
+      color: color(light, font);
+    }
+    &.dark {
+      background-color: color(dark, background);
+      color: color(dark, font);
+    }
   }
 </style>

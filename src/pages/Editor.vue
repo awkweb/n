@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="user"
-    class="editor"
+    :class="['editor', theme]"
   >
     <div
       class="editor__container"
@@ -47,6 +47,7 @@
       </div>
       <EditorFooter
         :activeNote="activeNote"
+        @handleOnClickToggleTheme="handleOnClickToggleTheme"
       />
     </div>
   </div>
@@ -104,7 +105,11 @@ export default {
   },
   watch: {
     user(newUser) {
-      if (newUser) this.FETCH_USER_DATA();
+      if (newUser) {
+        this
+          .FETCH_USER_DATA()
+          .then(() => this.setUpTheme('light', this.theme));
+      }
     },
   },
   methods: {
@@ -121,6 +126,7 @@ export default {
       'LOG_OUT_USER',
       'RESET_ACTIVE_NOTE',
       'UPDATE_NOTE',
+      'UPDATE_THEME',
     ]),
     handleOnBlurRename() {
       this.SET_RENAMING_ID(null);
@@ -137,6 +143,11 @@ export default {
       const nextActiveNote = this.notes[index];
       this.SET_ACTIVE_NOTE(nextActiveNote);
       this.SET_RESULT_INDEX(index);
+    },
+    handleOnClickToggleTheme() {
+      const nextTheme = this.theme === 'light' ? 'dark' : 'light';
+      this.setUpTheme(this.theme, nextTheme);
+      this.UPDATE_THEME(nextTheme);
     },
     handleOnInputUpdateQuery(query) {
       this.SET_QUERY(query);
@@ -205,7 +216,7 @@ export default {
         .$refs.EditorSearch
         .$refs[`EditorSearchResult${noteId}`][0]
         .$el;
-      const elementTop = element.offsetTop - ((element.clientHeight * 3.75) + 1);
+      const elementTop = element.offsetTop - ((element.clientHeight * 3.45) + 1);
       const elementBottom = elementTop + element.offsetHeight;
       const isVisible = (elementBottom <= containerViewBottom) && (elementTop >= containerViewTop);
       if (!isVisible) {
@@ -216,6 +227,10 @@ export default {
       keyboard.bind('esc', () => this.onKeyPressEscape());
       keyboard.bind('down', e => this.onKeyPressDown(e));
       keyboard.bind('up', e => this.onKeyPressUp(e));
+    },
+    setUpTheme(previousTheme, nextTheme) {
+      document.body.classList.remove(previousTheme);
+      document.body.classList.add(nextTheme);
     },
   },
   metaInfo: {
@@ -257,8 +272,9 @@ export default {
   }
   .editor__header-button {
     @include button;
+    background-color: transparent;
     border: 0;
-    color: color(gray, copy);
+    color: color(light, copy);
     font: {
       family: $font-sans-serif;
       size: .7rem;
@@ -269,13 +285,13 @@ export default {
       property: color;
       duration: $transition-duration;
     }
-    &:hover { color: color(orange); }
+    &:hover { color: color(light, primary); }
     &:last-child { margin-right: 0; }
   }
   .editor__body {
-    background-color: color(white);
+    background-color: transparent;
     border: {
-      color: color(gray);
+      color: color(light, input-border);
       style: solid;
       width: 1px;
     }
