@@ -30,7 +30,6 @@
         :name="note.name"
         :ref="`EditorSearchResult${note.id}`"
         :renaming="note.id === renamingId"
-        :theme="theme"
         @handleOnBlurRename="handleOnBlurRename"
         @handleOnClickFocusRename="handleOnClickFocusRename"
         @handleOnClickSelectResult="handleOnClickSelectResult"

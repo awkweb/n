@@ -7,6 +7,7 @@ import Editor from '@/pages/Editor';
 import LogIn from '@/pages/LogIn';
 import NotFound from '@/pages/NotFound';
 import ResetPassword from '@/pages/ResetPassword';
+import Settings from '@/pages/Settings';
 import SignUp from '@/pages/SignUp';
 
 Vue.use(Router);
@@ -31,6 +32,15 @@ export default new Router({
       path: '/',
       name: 'Home',
       component: Home,
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings,
+      beforeEnter: (to, from, next) => {
+        if (isLoggedIn()) next();
+        else next({ name: 'Home' });
+      },
     },
     {
       path: '/login/reset',

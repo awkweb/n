@@ -72,7 +72,7 @@
 .auth__input {
   background-color: transparent;
   border: {
-    color: color(light, border);
+    color: color(light, input-border);
     radius: 2px;
     style: solid;
     width: 1px;
@@ -94,7 +94,7 @@
     property: border-color;
     duration: $transition-duration;
   }
-  &:hover { border-color: color(light, border-hover); }
+  &:hover { border-color: color(light, input-border-hover); }
   &:focus { border-color: color(light, primary); }
   &::-webkit-input-placeholder { color: color(light, copy); }
   &.success {

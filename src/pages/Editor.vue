@@ -8,11 +8,8 @@
     >
       <div class="editor__header">
         <div>
-          <button
-            class="editor__header-button"
-          >
-            Settings
-          </button>
+          <router-link
+            :to="{ name: 'Settings' }" class="editor__header-button">Settings</router-link>
           <button
             @click="onClickLogOut"
             class="editor__header-button"
@@ -34,17 +31,9 @@
         @handleOnKeyupEnterRename="handleOnKeyupEnterRename"
         ref="EditorSearch"
       />
-      <div
-        v-if="activeNote"
-        v-html="activeNote.body"
-        class="editor__body"
-      >
-      </div>
-      <div
-        v-else
-        class="editor__body"
-      >
-      </div>
+      <EditorContent
+        :activeNote="activeNote"
+      />
       <EditorFooter
         :activeNote="activeNote"
         @handleOnClickToggleTheme="handleOnClickToggleTheme"
@@ -60,6 +49,7 @@ import {
   mapMutations,
 } from 'vuex';
 import keyboard from 'keyboardjs';
+import EditorContent from '@/components/Editor/EditorContent';
 import EditorFooter from '@/components/Editor/EditorFooter';
 import EditorSearch from '@/components/Editor/EditorSearch';
 import { noteMixin } from '@/mixins';
@@ -70,6 +60,7 @@ export default {
     noteMixin,
   ],
   components: {
+    EditorContent,
     EditorFooter,
     EditorSearch,
   },
@@ -250,7 +241,7 @@ export default {
       left: auto;
       right: auto;
     }
-    max-width: 33rem;
+    max-width: 34rem;
     padding: {
       bottom: 1rem;
       left: 1rem;
@@ -263,12 +254,6 @@ export default {
     align-items: center;
     justify-content: flex-end;
     margin-bottom: .25rem;
-    opacity: .35;
-    transition: {
-      property: opacity;
-      duration: $transition-duration;
-    }
-    &:hover { opacity: 1; }
   }
   .editor__header-button {
     @include button;
@@ -280,38 +265,23 @@ export default {
       size: .7rem;
     }
     margin-right: .25rem;
+    opacity: .35;
     padding: 0;
     transition: {
-      property: color;
+      property: color, opacity;
       duration: $transition-duration;
     }
-    &:hover { color: color(light, primary); }
+    text-decoration: none;
+    &:hover {
+      color: color(light, primary);
+      opacity: 1;
+    }
     &:last-child { margin-right: 0; }
   }
-  .editor__body {
-    background-color: transparent;
-    border: {
-      color: color(light, input-border);
-      style: solid;
-      width: 1px;
+  .editor.dark {
+    .editor__header-button{
+      color: color(dark, copy);
+      &:hover { color: color(dark, primary); }
     }
-    border-left: 0;
-    border-right: 0;
-    font: {
-      family: $font-sans-serif;
-      size: .9rem;
-      weight: 400;
-    }
-    max-height: 20rem;
-    min-height: 20rem;
-    overflow: scroll;
-    padding: {
-      bottom: .75rem;
-      left: .5rem;
-      right: .5rem;
-      top: .5rem;
-    }
-    width: 100%;
-    word-wrap: break-word;
   }
 </style>

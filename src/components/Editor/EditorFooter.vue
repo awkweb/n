@@ -4,8 +4,8 @@
       v-if="activeNote"
       class="editor-footer__details"
     >
-      <span class="mono">{{ activeNote.body | wordCount }}</span> words ·
-      <span class="mono">{{ activeNote.body | charCount }}</span> chars
+      <span class="mono">{{ charCount }}</span> {{ charCount > 1 ? 'chars': 'char' }} ·
+      <span class="mono">{{ wordCount }}</span> {{ wordCount > 1 ? 'words': 'word' }}
     </div>
     <div
       v-else
@@ -41,7 +41,19 @@ export default {
   },
   props: {
     activeNote: {
-      required: true,
+      type: Object,
+    },
+  },
+  computed: {
+    charCount() {
+      return this.activeNote && this.activeNote.body ?
+        this.activeNote.body.replace(/\s/g, '').length :
+        0;
+    },
+    wordCount() {
+      return this.activeNote && this.activeNote.body ?
+        (this.activeNote.body.replace(/['";:,.?¿\-!¡]+/g, '').match(/\S+/g) || []).length :
+        0;
     },
   },
   methods: {
@@ -113,6 +125,12 @@ export default {
     transition: {
       property: fill;
       duration: $transition-duration;
+    }
+  }
+
+  .editor.dark {
+    .editor-footer {
+      color: color(dark, copy);
     }
   }
 </style>

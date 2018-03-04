@@ -19,7 +19,7 @@
     >
     <template v-if="!renaming">
       <span class="editor-search-result__info">
-        <span>{{ name }}</span> –
+        <span class="editor-search-result__name">{{ name }}</span> –
         <span class="editor-search-result__body">{{ body }}</span>
       </span>
 
@@ -126,6 +126,9 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .editor-search-result__name {
+    color: color(light, font);
+  }
   .editor-search-result__body {
     color: color(light, copy);
   }
@@ -148,7 +151,9 @@ export default {
   }
 
   .editor.dark {
+    .editor-search-result__info { color: color(dark, copy); }
     .editor-search-result.active { background-color: color(dark, highlight); }
+    .editor-search-result__name { color: color(dark, font); }
     .editor-search-result__body { color: color(dark, copy); }
     .editor-search-result__input {
       background-color: color(dark, highlight);

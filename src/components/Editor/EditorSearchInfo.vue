@@ -29,28 +29,28 @@ export default {
   name: 'EditorSearchInfo',
   props: {
     editing: {
-      type: Boolean,
       required: true,
+      type: Boolean,
     },
     queryLength: {
-      type: Number,
       required: true,
+      type: Number,
     },
     renaming: {
-      type: Boolean,
       required: true,
+      type: Boolean,
     },
     resultCount: {
-      type: Number,
       required: true,
+      type: Number,
     },
     searching: {
-      type: Boolean,
       required: true,
+      type: Boolean,
     },
     selected: {
-      type: Boolean,
       required: true,
+      type: Boolean,
     },
   },
 };
