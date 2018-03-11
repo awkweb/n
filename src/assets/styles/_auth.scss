@@ -132,16 +132,16 @@
   }
   width: 100%;
   &:hover {
-    border-color: color(light, border-hover);
+    border-color: color(light, button-border-hover);
     box-shadow: $box-shadow-button-hover;
     transform: translateY(-1px);
   }
   &:active {
-    background-color: color(light, background-active);
+    background-color: color(light, button-background-active);
     box-shadow: none;
     transform: translateY(1px);
   }
-  &.loading {
+  &:disabled {
     opacity: .65;
     pointer-events: none;
   }

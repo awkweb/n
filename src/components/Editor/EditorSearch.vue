@@ -5,6 +5,7 @@
       @handleOnBlur="handleOnBlur"
       @handleOnFocus="handleOnFocus"
       @handleOnInputUpdateQuery="handleOnInputUpdateQuery"
+      @handleOnKeyupSearch="handleOnKeyupSearch"
       ref="EditorSearchField"
     />
     <EditorSearchInfo
@@ -28,10 +29,12 @@
         :id="note.id"
         :index="index"
         :name="note.name"
+        :noteKey="note.key"
         :ref="`EditorSearchResult${note.id}`"
         :renaming="note.id === renamingId"
         @handleOnBlurRename="handleOnBlurRename"
         @handleOnClickFocusRename="handleOnClickFocusRename"
+        @handleOnClickOpenDeletePrompt="handleOnClickOpenDeletePrompt"
         @handleOnClickSelectResult="handleOnClickSelectResult"
         @handleOnKeyupEnterRename="handleOnKeyupEnterRename"
       />
@@ -84,6 +87,9 @@ export default {
     handleOnClickFocusRename(noteId) {
       this.$emit('handleOnClickFocusRename', noteId);
     },
+    handleOnClickOpenDeletePrompt(noteKey) {
+      this.$emit('handleOnClickOpenDeletePrompt', noteKey);
+    },
     handleOnClickSelectResult(index) {
       this.$emit('handleOnClickSelectResult', index);
     },
@@ -93,8 +99,11 @@ export default {
     handleOnInputUpdateQuery(query) {
       this.$emit('handleOnInputUpdateQuery', query);
     },
-    handleOnKeyupEnterRename(newName) {
-      this.$emit('handleOnKeyupEnterRename', newName);
+    handleOnKeyupEnterRename(name) {
+      this.$emit('handleOnKeyupEnterRename', name);
+    },
+    handleOnKeyupSearch() {
+      this.$emit('handleOnKeyupSearch');
     },
   },
 };

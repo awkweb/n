@@ -8,7 +8,7 @@
       @input="onInputUpdateQuery($event.target.value)"
       @keyup.enter="onKeyupSearch"
       autofocus
-      class="editor-search-field__input"
+      class="editor-search-field__input mousetrap"
       placeholder="Search or create"
       ref="Input"
       spellcheck="false"
@@ -45,6 +45,7 @@ export default {
       this.$emit('handleOnInputUpdateQuery', query);
     },
     onKeyupSearch() {
+      this.$emit('handleOnKeyupSearch');
     },
   },
 };

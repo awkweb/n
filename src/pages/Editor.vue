@@ -1,15 +1,18 @@
 <template>
   <div
-    v-if="user"
     :class="['editor', theme]"
   >
-    <div
-      class="editor__container"
+    <template
+      v-if="user && notes.length"
     >
       <div class="editor__header">
         <div>
           <router-link
-            :to="{ name: 'Settings' }" class="editor__header-button">Settings</router-link>
+            :to="{ name: 'Settings' }"
+            class="editor__header-button"
+          >
+            Settings
+          </router-link>
           <button
             @click="onClickLogOut"
             class="editor__header-button"
@@ -27,18 +30,39 @@
         @handleOnBlurRename="handleOnBlurRename"
         @handleOnClickFocusRename="handleOnClickFocusRename"
         @handleOnClickSelectResult="handleOnClickSelectResult"
+        @handleOnClickOpenDeletePrompt="handleOnClickOpenDeletePrompt"
         @handleOnInputUpdateQuery="handleOnInputUpdateQuery"
         @handleOnKeyupEnterRename="handleOnKeyupEnterRename"
+        @handleOnKeyupSearch="handleOnKeyupSearch"
         ref="EditorSearch"
       />
       <EditorContent
         :activeNote="activeNote"
+        :editingId="editingId"
+        :isFullScreen="isFullScreen"
+        @handleOnBlurEditorContent="handleOnBlurEditorContent"
+        @handleOnFocusEditorContent="handleOnFocusEditorContent"
+        @handleOnInputUpdateBody="handleOnInputUpdateBody"
+        ref="EditorContent"
       />
       <EditorFooter
         :activeNote="activeNote"
+        @handleOnClickToggleFullScreen="handleOnClickToggleFullScreen"
         @handleOnClickToggleTheme="handleOnClickToggleTheme"
       />
-    </div>
+    </template>
+    <Loader
+      v-else
+    />
+    <EditorPrompt
+      v-if="deleteNoteKey"
+      :loading="editorPromptLoading"
+      confirmTitle="Delete"
+      description="Are you sure you want to delete this note? There is no undo."
+      title="Delete note"
+      @handleOnClickConfirm="handleOnClickDelete"
+      @handleOnClickOutside="handleOnClickOutside"
+    />
   </div>
 </template>
 
@@ -48,10 +72,12 @@ import {
   mapGetters,
   mapMutations,
 } from 'vuex';
-import keyboard from 'keyboardjs';
+import Mousetrap from 'mousetrap';
 import EditorContent from '@/components/Editor/EditorContent';
 import EditorFooter from '@/components/Editor/EditorFooter';
+import EditorPrompt from '@/components/Editor/EditorPrompt';
 import EditorSearch from '@/components/Editor/EditorSearch';
+import Loader from '@/components/Loader';
 import { noteMixin } from '@/mixins';
 
 export default {
@@ -63,11 +89,18 @@ export default {
     EditorContent,
     EditorFooter,
     EditorSearch,
+    EditorPrompt,
+    Loader,
   },
+  data: () => ({
+    deleteNoteKey: null,
+    editorPromptLoading: false,
+  }),
   computed: {
     ...mapGetters([
       'activeNote',
       'editingId',
+      'isFullScreen',
       'notes',
       'renamingId',
       'resultIndex',
@@ -92,26 +125,28 @@ export default {
     this.setUpHotKeys();
   },
   beforeDestroy() {
-    keyboard.reset();
+    Mousetrap.reset();
   },
   watch: {
     user(newUser) {
       if (newUser) {
-        this
-          .FETCH_USER_DATA()
-          .then(() => this.setUpTheme('light', this.theme));
+        this.FETCH_USER_DATA();
       }
     },
   },
   methods: {
     ...mapMutations([
       'SET_ACTIVE_NOTE',
+      'SET_EDITING_ID',
       'SET_QUERY',
       'SET_RENAMING_ID',
       'SET_RESULT_INDEX',
       'SET_USER',
+      'TOGGLE_FULL_SCREEN',
     ]),
     ...mapActions([
+      'CREATE_NOTE',
+      'DELETE_NOTE',
       'FETCH_USER',
       'FETCH_USER_DATA',
       'LOG_OUT_USER',
@@ -119,6 +154,13 @@ export default {
       'UPDATE_NOTE',
       'UPDATE_THEME',
     ]),
+    createNote() {
+      this.CREATE_NOTE();
+      this.handleOnKeyupSearch();
+    },
+    handleOnBlurEditorContent() {
+      this.SET_EDITING_ID(null);
+    },
     handleOnBlurRename() {
       this.SET_RENAMING_ID(null);
       this
@@ -126,6 +168,18 @@ export default {
         .$refs.EditorSearchField
         .$refs.Input
         .focus();
+    },
+    handleOnClickDelete() {
+      this.editorPromptLoading = true;
+      this
+        .DELETE_NOTE(this.deleteNoteKey)
+        .then(() => {
+          this.editorPromptLoading = false;
+          this.deleteNoteKey = null;
+        })
+        .catch(() => {
+          this.editorPromptLoading = false;
+        });
     },
     handleOnClickFocusRename(noteId) {
       this.SET_RENAMING_ID(noteId);
@@ -135,10 +189,28 @@ export default {
       this.SET_ACTIVE_NOTE(nextActiveNote);
       this.SET_RESULT_INDEX(index);
     },
+    handleOnClickOpenDeletePrompt(noteKey) {
+      this.deleteNoteKey = noteKey;
+    },
+    handleOnClickOutside() {
+      this.deleteNoteKey = null;
+    },
+    handleOnClickToggleFullScreen() {
+      this.TOGGLE_FULL_SCREEN();
+    },
     handleOnClickToggleTheme() {
       const nextTheme = this.theme === 'light' ? 'dark' : 'light';
-      this.setUpTheme(this.theme, nextTheme);
       this.UPDATE_THEME(nextTheme);
+    },
+    handleOnFocusEditorContent(editingId) {
+      this.SET_EDITING_ID(editingId);
+    },
+    handleOnInputUpdateBody(body) {
+      const newNote = Object.assign(this.activeNote, { body });
+      this.UPDATE_NOTE(newNote);
+      if (this.activeNote.id !== this.editingId) {
+        this.SET_RESULT_INDEX(0);
+      }
     },
     handleOnInputUpdateQuery(query) {
       this.SET_QUERY(query);
@@ -154,11 +226,19 @@ export default {
       this.SET_ACTIVE_NOTE(note);
       this.SET_RESULT_INDEX(resultIndex);
     },
-    handleOnKeyupEnterRename(newName) {
-      const newNote = Object.assign(this.activeNote, { name: newName });
+    handleOnKeyupEnterRename(name) {
+      const newNote = Object.assign(this.activeNote, { name });
       this
         .UPDATE_NOTE(newNote)
         .then(() => this.handleOnBlurRename());
+    },
+    handleOnKeyupSearch() {
+      if (this.activeNote) {
+        this
+          .$refs.EditorContent
+          .$refs.EditorContentTextarea
+          .focus();
+      }
     },
     onClickLogOut() {
       this
@@ -215,17 +295,47 @@ export default {
       }
     },
     setUpHotKeys() {
-      keyboard.bind('esc', () => this.onKeyPressEscape());
-      keyboard.bind('down', e => this.onKeyPressDown(e));
-      keyboard.bind('up', e => this.onKeyPressUp(e));
-    },
-    setUpTheme(previousTheme, nextTheme) {
-      document.body.classList.remove(previousTheme);
-      document.body.classList.add(nextTheme);
+      Mousetrap.prototype.stopCallback = (e, element, combo) => {
+        if ((`${element.className}`).indexOf('mousetrap') > -1 ||
+          (combo === 'mod+enter' && this.editingId)) {
+          return false;
+        }
+        return element.tagName === 'INPUT' ||
+          element.tagName === 'SELECT' ||
+          element.tagName === 'TEXTAREA';
+      };
+      Mousetrap.bind('tab', () => setTimeout(() => this.handleOnKeyupSearch(), 0));
+      Mousetrap.bind('esc', () => this.onKeyPressEscape());
+      Mousetrap.bind('down', e => this.onKeyPressDown(e));
+      Mousetrap.bind('up', e => this.onKeyPressUp(e));
+      Mousetrap.bind('mod+enter', () => this.createNote());
+      Mousetrap.bind('mod+d', (e) => {
+        e.preventDefault();
+        if (this.activeNote) {
+          this.deleteNoteKey = this.activeNote.key;
+        }
+      });
+      Mousetrap.bind('mod+e', (e) => {
+        e.preventDefault();
+        if (this.activeNote) {
+          this.handleOnClickFocusRename(this.activeNote.id);
+        }
+      });
+      Mousetrap.bind('mod+.', () => this.handleOnClickToggleTheme());
+      Mousetrap.bind('mod+/', () => {
+        if (this.activeNote) {
+          this.TOGGLE_FULL_SCREEN();
+        }
+      });
     },
   },
-  metaInfo: {
-    title: 'App',
+  metaInfo() {
+    return {
+      title: this.activeNote ? this.activeNote.name : 'App',
+      bodyAttrs: {
+        class: this.theme,
+      },
+    };
   },
 };
 </script>
@@ -235,19 +345,19 @@ export default {
   @import '../assets/styles/functions';
   @import '../assets/styles/mixins';
   .editor {
-  }
-  .editor__container {
     margin: {
       left: auto;
       right: auto;
     }
     max-width: 34rem;
+    min-height: 100vh;
     padding: {
       bottom: 1rem;
       left: 1rem;
       right: 1rem;
       top: .5rem;
     }
+    position: relative;
   }
   .editor__header {
     @include flex-row;

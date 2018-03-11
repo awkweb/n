@@ -15,6 +15,14 @@ Vue.use(Meta);
 
 const isLoggedIn = () =>
   JSON.parse(localStorage.getItem('user')) !== null;
+const beforeEnterLoggedIn = (to, from, next) => {
+  if (isLoggedIn()) next();
+  else next({ name: 'Home' });
+};
+const beforeEnterLoggedOut = (to, from, next) => {
+  if (!isLoggedIn()) next();
+  else next({ name: 'App' });
+};
 
 export default new Router({
   mode: 'history',
@@ -23,10 +31,7 @@ export default new Router({
       path: '/',
       name: 'App',
       component: Editor,
-      beforeEnter: (to, from, next) => {
-        if (isLoggedIn()) next();
-        else next({ name: 'Home' });
-      },
+      beforeEnter: beforeEnterLoggedIn,
     },
     {
       path: '/',
@@ -37,39 +42,27 @@ export default new Router({
       path: '/settings',
       name: 'Settings',
       component: Settings,
-      beforeEnter: (to, from, next) => {
-        if (isLoggedIn()) next();
-        else next({ name: 'Home' });
-      },
+      beforeEnter: beforeEnterLoggedIn,
     },
     {
       path: '/login/reset',
       name: 'ResetPassword',
       component: ResetPassword,
-      beforeEnter: (to, from, next) => {
-        if (!isLoggedIn()) next();
-        else next({ name: 'App' });
-      },
+      beforeEnter: beforeEnterLoggedOut,
       props: route => ({ email: route.query.email }),
     },
     {
       path: '/login',
       name: 'LogIn',
       component: LogIn,
-      beforeEnter: (to, from, next) => {
-        if (!isLoggedIn()) next();
-        else next({ name: 'App' });
-      },
+      beforeEnter: beforeEnterLoggedOut,
       props: route => ({ email: route.query.email }),
     },
     {
       path: '/signup',
       name: 'SignUp',
       component: SignUp,
-      beforeEnter: (to, from, next) => {
-        if (!isLoggedIn()) next();
-        else next({ name: 'App' });
-      },
+      beforeEnter: beforeEnterLoggedOut,
     },
     {
       path: '*',

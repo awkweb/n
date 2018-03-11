@@ -41,10 +41,10 @@
         </div>
 
         <button
-          :disabled="$v.validationGroup.$invalid"
+          :disabled="$v.validationGroup.$invalid || loading"
           @click.prevent="onClickSignUp"
           @keyup.enter="onClickSignUp"
-          :class="['auth__button', { 'loading': loading }]"
+          class="auth__button"
         >
           {{ loading ? 'Creating account...' : 'Sign Up' }}
         </button>

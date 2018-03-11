@@ -19,26 +19,35 @@
     >
     <template v-if="!renaming">
       <span class="editor-search-result__info">
-        <span class="editor-search-result__name">{{ name }}</span> –
+        <span class="editor-search-result__name">{{ name }}</span>
+        –
         <span class="editor-search-result__body">{{ body }}</span>
       </span>
 
       <time class="editor-search-result__time">{{ dateModified | prettyDate }}</time>
+      <div class="editor-search-result__actions">
+        <button
+          @click.stop="onClickFocusRename"
+          class="editor-search-result__action"
+        >
+          Rename
+        </button>
+        <button
+          @click="onClickDelete"
+          class="editor-search-result__action delete"
+        >
+          Delete
+        </button>
+      </div>
     </template>
   </li>
 </template>
 
 <script>
 import moment from 'moment';
-import DeleteIcon from '@/assets/icons/trash.svg';
-import EditIcon from '@/assets/icons/edit.svg';
 
 export default {
   name: 'EditorSearchResult',
-  components: {
-    DeleteIcon,
-    EditIcon,
-  },
   props: {
     active: {
       type: Boolean,
@@ -60,6 +69,10 @@ export default {
       type: String,
       required: true,
     },
+    noteKey: {
+      type: String,
+      required: true,
+    },
     dateModified: {
       type: String,
       required: true,
@@ -72,12 +85,20 @@ export default {
   data: () => ({
     newName: null,
   }),
+  beforeUpdate() {
+    if (this.renaming && !this.newName) {
+      this.newName = this.name;
+    }
+  },
   methods: {
     onBlurRename() {
       this.$emit('handleOnBlurRename');
     },
+    onClickDelete() {
+      this.$emit('handleOnClickOpenDeletePrompt', this.noteKey);
+    },
     onClickFocusRename() {
-      this.newName = this.name;
+      this.newName = null;
       this.$emit('handleOnClickFocusRename', this.id);
     },
     onClickSelectResult() {
@@ -116,13 +137,22 @@ export default {
       left: .35rem;
       right: .35rem;
     }
+    position: relative;
+    &:hover {
+      .editor-search-result__actions {
+        @include flex-row;
+        @include flex-center;
+      }
+    }
     &.active {
       background-color: color(light, highlight);
       border-radius: 2px;
+      .editor-search-result__actions { background-color: color(light, highlight); }
     }
     span { white-space: nowrap; }
   }
   .editor-search-result__info {
+    color: color(light, copy);
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -149,15 +179,62 @@ export default {
     outline: 0;
     padding: 0;
   }
+  .editor-search-result__actions {
+    background-color: color(light, background);
+    display: none;
+    padding-left: .25rem;
+    position: absolute;
+    right: .25rem;
+  }
+  .editor-search-result__action {
+    @include button;
+    background-color: color(light, background);
+    border: {
+      color: color(light, input-border);
+      radius: 2px;
+      style: solid;
+      width: 1px;
+    }
+    font: {
+      size: .65rem;
+      weight: 500;
+    }
+    height: 24px;
+    padding: {
+      bottom: 0;
+      left: .5rem;
+      right: .5rem;
+      top: 0;
+    }
+    transition: {
+      property: border-color;
+      duration: $transition-duration;
+    }
+    &:hover { border-color: color(light, input-border-hover); }
+    &:first-child { margin-right: .25rem; }
+    &.delete { color: color(light, danger); }
+  }
 
   .editor.dark {
     .editor-search-result__info { color: color(dark, copy); }
-    .editor-search-result.active { background-color: color(dark, highlight); }
+    .editor-search-result.active {
+      background-color: color(dark, highlight);
+      .editor-search-result__actions { background-color: color(dark, highlight); }
+    }
     .editor-search-result__name { color: color(dark, font); }
     .editor-search-result__body { color: color(dark, copy); }
     .editor-search-result__input {
       background-color: color(dark, highlight);
       color: color(dark, font);
+    }
+    .editor-search-result__actions {
+      background-color: color(dark, background);
+    }
+    .editor-search-result__action {
+      background-color: color(dark, background);
+      border-color: color(dark, input-border);
+      color: color(dark, font);
+      &.delete { color: color(dark, danger); }
     }
   }
 </style>

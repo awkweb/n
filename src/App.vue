@@ -46,4 +46,8 @@ export default {
       color: color(dark, font);
     }
   }
+  button { font-family: $font-sans-serif; }
+  #app {
+    min-height: 100vh;
+  }
 </style>

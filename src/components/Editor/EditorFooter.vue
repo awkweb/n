@@ -15,6 +15,12 @@
     </div>
     <div class="editor-footer__actions">
       <button
+        v-if="activeNote"
+        @click="onClickToggleFullScreen"
+        class="editor-footer__button"
+      >
+      </button>
+      <button
         class="editor-footer__button"
       >
         <NewIcon class="editor-footer__button-icon" />
@@ -57,6 +63,9 @@ export default {
     },
   },
   methods: {
+    onClickToggleFullScreen() {
+      this.$emit('handleOnClickToggleFullScreen');
+    },
     onClickToggleTheme() {
       this.$emit('handleOnClickToggleTheme');
     },

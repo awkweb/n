@@ -7,10 +7,6 @@ const secondsFromNow = (now, dateString) =>
 // eslint-disable-next-line import/prefer-default-export
 export const noteMixin = {
   methods: {
-    nextIdForNotes(notes) {
-      const ids = notes.map(note => note.id);
-      return ids.length > 0 ? Math.max(...ids) + 1 : 1;
-    },
     filterNotesForQuery: (query, notes) => notes
       .map((note) => {
         const queryLower = query.toLowerCase();

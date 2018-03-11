@@ -24,6 +24,30 @@ export default {
   updateProfile: async data => getCurrentUser().updateProfile(data),
   watchAuthStateChanged: callback => auth().onAuthStateChanged(callback),
   // EDITOR
+  createNote: (userId, dateCreated, note) =>
+    new Promise(resolve =>
+      firebase
+        .database()
+        .ref(`users/${userId}/notes`)
+        .push({
+          ...note,
+          date_created: dateCreated,
+          date_modified: dateCreated,
+        })
+        .then(res => resolve({
+          ...note,
+          body: '',
+          date_created: dateCreated,
+          date_modified: dateCreated,
+          key: res.key,
+        }))),
+  deleteNote: (userId, noteKey) =>
+    new Promise(resolve =>
+      firebase
+        .database()
+        .ref(`users/${userId}/notes/${noteKey}`)
+        .remove()
+        .then(() => resolve(true))),
   getDataForUserId: userId =>
     new Promise(resolve =>
       firebase
