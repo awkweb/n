@@ -19,17 +19,25 @@
         @click="onClickToggleFullScreen"
         class="editor-footer__button"
       >
-      </button>
-      <button
-        class="editor-footer__button"
-      >
-        <NewIcon class="editor-footer__button-icon" />
+        <FullScreenIcon class="editor-footer__button-icon" />
       </button>
       <button
         @click="onClickToggleTheme"
         class="editor-footer__button"
       >
-        <ThemeIcon class="editor-footer__button-icon" />
+        <DarkThemeIcon
+          v-if="theme === 'light'"
+          class="editor-footer__button-icon"
+        />
+        <LightThemeIcon
+          v-else
+          class="editor-footer__button-icon"
+        />
+      </button>
+      <button
+        class="editor-footer__button"
+      >
+        <NewIcon class="editor-footer__button-icon" />
       </button>
     </div>
   </div>
@@ -37,17 +45,25 @@
 
 <script>
 import NewIcon from '@/assets/icons/plus.svg';
-import ThemeIcon from '@/assets/icons/eye.svg';
+import DarkThemeIcon from '@/assets/icons/moon.svg';
+import LightThemeIcon from '@/assets/icons/sun.svg';
+import FullScreenIcon from '@/assets/icons/maximize.svg';
 
 export default {
   name: 'EditorFooter',
   components: {
+    FullScreenIcon,
+    LightThemeIcon,
     NewIcon,
-    ThemeIcon,
+    DarkThemeIcon,
   },
   props: {
     activeNote: {
       type: Object,
+    },
+    theme: {
+      type: String,
+      required: true,
     },
   },
   computed: {
@@ -123,14 +139,14 @@ export default {
     width: 1.5rem;
     &:hover {
       border-color: color(light, border-hover);
-      .editor-footer__button-icon { fill: color(light, font); }
+      .editor-footer__button-icon { stroke: color(light, font); }
     }
     &:last-child { margin-right: 0; }
   }
   .editor-footer__button-icon {
-    fill: color(light, copy);
-    height: 25px;
+    height: 20px;
     pointer-events: none;
+    stroke: color(light, copy);
     transition: {
       property: fill;
       duration: $transition-duration;

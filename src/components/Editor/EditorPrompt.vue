@@ -93,6 +93,7 @@ export default {
       top: 5rem;
     }
     max-width: 25rem;
+    overflow: hidden;
   }
   .editor-prompt__title {
     font: {

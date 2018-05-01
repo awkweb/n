@@ -3,7 +3,7 @@
     :class="['editor', theme]"
   >
     <template
-      v-if="user && notes.length"
+      v-if="user && !!notes && notes.length >= 0"
     >
       <div class="editor__header">
         <div>
@@ -24,7 +24,7 @@
       <EditorSearch
         :activeNoteId="activeNoteId"
         :editingId="editingId"
-        :notes="filteredNotes"
+        :notes="activeNotes"
         :query="query"
         :renamingId="renamingId"
         @handleOnBlurRename="handleOnBlurRename"
@@ -47,6 +47,7 @@
       />
       <EditorFooter
         :activeNote="activeNote"
+        :theme="theme"
         @handleOnClickToggleFullScreen="handleOnClickToggleFullScreen"
         @handleOnClickToggleTheme="handleOnClickToggleTheme"
       />
@@ -78,13 +79,9 @@ import EditorFooter from '@/components/Editor/EditorFooter';
 import EditorPrompt from '@/components/Editor/EditorPrompt';
 import EditorSearch from '@/components/Editor/EditorSearch';
 import Loader from '@/components/Loader';
-import { noteMixin } from '@/mixins';
 
 export default {
   name: 'Editor',
-  mixins: [
-    noteMixin,
-  ],
   components: {
     EditorContent,
     EditorFooter,
@@ -99,6 +96,8 @@ export default {
   computed: {
     ...mapGetters([
       'activeNote',
+      'activeNoteId',
+      'activeNotes',
       'editingId',
       'isFullScreen',
       'notes',
@@ -108,31 +107,17 @@ export default {
       'query',
       'user',
     ]),
-    activeNoteId() {
-      return this.activeNote ? this.activeNote.id : -1;
-    },
-    filteredNotes() {
-      const emptyQuery = this.query.length === 0;
-      const filteredNotes = emptyQuery ?
-        this.notes : this.filterNotesForQuery(this.query, this.notes);
-      return this.sortNotes(filteredNotes, !emptyQuery);
-    },
   },
   mounted() {
-    this.FETCH_USER();
+    this
+      .FETCH_USER()
+      .then(() => this.FETCH_USER_DATA());
   },
   created() {
     this.setUpHotKeys();
   },
   beforeDestroy() {
     Mousetrap.reset();
-  },
-  watch: {
-    user(newUser) {
-      if (newUser) {
-        this.FETCH_USER_DATA();
-      }
-    },
   },
   methods: {
     ...mapMutations([
@@ -151,7 +136,8 @@ export default {
       'FETCH_USER_DATA',
       'LOG_OUT_USER',
       'RESET_ACTIVE_NOTE',
-      'UPDATE_NOTE',
+      'UPDATE_NOTE_BODY',
+      'UPDATE_NOTE_NAME',
       'UPDATE_THEME',
     ]),
     createNote() {
@@ -185,9 +171,9 @@ export default {
       this.SET_RENAMING_ID(noteId);
     },
     handleOnClickSelectResult(index) {
-      const nextActiveNote = this.notes[index];
-      this.SET_ACTIVE_NOTE(nextActiveNote);
+      const nextActiveNote = this.activeNotes[index];
       this.SET_RESULT_INDEX(index);
+      this.SET_ACTIVE_NOTE(nextActiveNote);
     },
     handleOnClickOpenDeletePrompt(noteKey) {
       this.deleteNoteKey = noteKey;
@@ -206,18 +192,14 @@ export default {
       this.SET_EDITING_ID(editingId);
     },
     handleOnInputUpdateBody(body) {
-      const newNote = Object.assign(this.activeNote, { body });
-      this.UPDATE_NOTE(newNote);
-      if (this.activeNote.id !== this.editingId) {
-        this.SET_RESULT_INDEX(0);
-      }
+      this.UPDATE_NOTE_BODY(body);
     },
     handleOnInputUpdateQuery(query) {
       this.SET_QUERY(query);
       let note;
       let resultIndex;
-      if (this.filteredNotes.length > 0) {
-        note = this.filteredNotes[0];
+      if (this.activeNotes.length > 0) {
+        note = this.activeNotes[0];
         resultIndex = 0;
       } else {
         note = null;
@@ -227,9 +209,8 @@ export default {
       this.SET_RESULT_INDEX(resultIndex);
     },
     handleOnKeyupEnterRename(name) {
-      const newNote = Object.assign(this.activeNote, { name });
       this
-        .UPDATE_NOTE(newNote)
+        .UPDATE_NOTE_NAME(name)
         .then(() => this.handleOnBlurRename());
     },
     handleOnKeyupSearch() {
@@ -258,11 +239,11 @@ export default {
     },
     onKeyPressDown(event) {
       if (!this.editingId && !this.renamingId &&
-        this.resultIndex !== this.filteredNotes.length - 1) {
+        this.resultIndex !== this.activeNotes.length - 1) {
         event.preventDefault();
         const index = this.resultIndex + 1;
+        const note = this.activeNotes[index];
         this.SET_RESULT_INDEX(index);
-        const note = this.filteredNotes[index];
         this.SET_ACTIVE_NOTE(note);
         this.scrollToNoteId(note.id, true);
       }
@@ -271,8 +252,8 @@ export default {
       if (!this.editingId && !this.renamingId && this.resultIndex > 0) {
         event.preventDefault();
         const index = this.resultIndex - 1;
+        const note = this.activeNotes[index];
         this.SET_RESULT_INDEX(index);
-        const note = this.filteredNotes[index];
         this.SET_ACTIVE_NOTE(note);
         this.scrollToNoteId(note.id, false);
       }
@@ -369,23 +350,19 @@ export default {
     @include button;
     background-color: transparent;
     border: 0;
-    color: color(light, copy);
+    color: color(light, copy-light);
     font: {
       family: $font-sans-serif;
       size: .7rem;
     }
     margin-right: .25rem;
-    opacity: .35;
     padding: 0;
     transition: {
-      property: color, opacity;
+      property: color;
       duration: $transition-duration;
     }
     text-decoration: none;
-    &:hover {
-      color: color(light, primary);
-      opacity: 1;
-    }
+    &:hover { color: color(light, primary); }
     &:last-child { margin-right: 0; }
   }
   .editor.dark {

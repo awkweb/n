@@ -43,10 +43,10 @@
           >
         </div>
         <button
+          :class="['auth__button', { loading }]"
           :disabled="$v.validationGroup.$invalid"
           @click.prevent="onClickResetPassword"
           @keyup.enter="onClickResetPassword"
-          :class="['auth__button', { 'loading': loading }]"
         >
           {{ loading ? 'Resetting Password...' : 'Reset Password' }}
         </button>

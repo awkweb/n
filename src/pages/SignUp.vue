@@ -35,16 +35,16 @@
           <input
             v-model="password"
             :class="['auth__input', { 'success': !$v.password.$invalid }]"
-            placeholder="Super, secret"
+            placeholder="Password"
             type="password"
           >
         </div>
 
         <button
+          :class="['auth__button', { loading }]"
           :disabled="$v.validationGroup.$invalid || loading"
           @click.prevent="onClickSignUp"
           @keyup.enter="onClickSignUp"
-          class="auth__button"
         >
           {{ loading ? 'Creating account...' : 'Sign Up' }}
         </button>

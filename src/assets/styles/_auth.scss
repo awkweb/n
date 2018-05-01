@@ -7,7 +7,7 @@
   @include flex-center;
 }
 .auth__container {
-  margin-top: 2rem;
+  margin-top: 4rem;
   max-width: 21rem;
   padding: {
     left: 1rem;
@@ -103,7 +103,7 @@
       position: right .55rem center;
       repeat: no-repeat;
       size: auto;
-    };
+    }
   }
 }
 .auth__button {
@@ -141,7 +141,7 @@
     box-shadow: none;
     transform: translateY(1px);
   }
-  &:disabled {
+  &.loading {
     opacity: .65;
     pointer-events: none;
   }

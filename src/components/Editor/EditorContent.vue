@@ -151,11 +151,11 @@ export default {
     width: 35px;
     &:hover {
       border-color: color(light, input-border-hover);
-      .editor-content__close-icon { fill: color(light, input-border-hover); }
+      .editor-content__close-icon { stroke: color(light, input-border-hover); }
     }
   }
   .editor-content__close-icon {
-    fill: color(light, input-border);
+    stroke: color(light, input-border);
   }
 
   .editor.dark {

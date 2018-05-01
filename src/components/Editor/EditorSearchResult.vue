@@ -30,13 +30,13 @@
           @click.stop="onClickFocusRename"
           class="editor-search-result__action"
         >
-          Rename
+          <RenameIcon class="editor-search-result__action-icon" />
         </button>
         <button
           @click="onClickDelete"
           class="editor-search-result__action delete"
         >
-          Delete
+          <DeleteIcon class="editor-search-result__action-icon" />
         </button>
       </div>
     </template>
@@ -45,9 +45,15 @@
 
 <script>
 import moment from 'moment';
+import DeleteIcon from '@/assets/icons/trash.svg';
+import RenameIcon from '@/assets/icons/pencil.svg';
 
 export default {
   name: 'EditorSearchResult',
+  components: {
+    DeleteIcon,
+    RenameIcon,
+  },
   props: {
     active: {
       type: Boolean,
@@ -213,6 +219,15 @@ export default {
     &:hover { border-color: color(light, input-border-hover); }
     &:first-child { margin-right: .25rem; }
     &.delete { color: color(light, danger); }
+  }
+  .editor-search-result__action-icon {
+    height: 20px;
+    pointer-events: none;
+    stroke: color(light, copy);
+    transition: {
+      property: fill;
+      duration: $transition-duration;
+    }
   }
 
   .editor.dark {

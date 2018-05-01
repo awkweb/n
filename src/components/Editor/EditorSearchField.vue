@@ -90,12 +90,12 @@ export default {
     &::-webkit-input-placeholder { color: color(light, copy); }
   }
   .editor-search-field__icon {
-    fill: color(light, font);
-    height: 25px;
+    height: 20px;
     pointer-events: none;
     position: absolute;
     right: .55rem;
-    top: .55rem;
+    stroke: color(light, font);
+    top: .75rem;
     transition: {
       duration: $transition-duration;
       property: fill;
@@ -110,6 +110,6 @@ export default {
       &:focus { border-color: color(dark, primary); }
       &::-webkit-input-placeholder { color: color(dark, copy); }
     }
-    .editor-search-field__icon { fill: color(dark, font); }
+    .editor-search-field__icon { stroke: color(dark, font); }
   }
 </style>

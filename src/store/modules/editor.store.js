@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import moment from 'moment';
 import api from '@/api';
+import utils from '@/utils';
 import {
   ADD_NOTE,
   DELETE_NOTE,
@@ -18,6 +19,7 @@ import {
 const store = {
   state: {
     activeNote: null,
+    activeNotes: [],
     editingId: null,
     isFullScreen: false,
     notes: [],
@@ -52,13 +54,27 @@ const store = {
       commit(SET_RESULT_INDEX, -1);
       commit(SET_ACTIVE_NOTE, null);
     },
-    UPDATE_NOTE: ({ commit, rootState }, note) =>
-      api
+    UPDATE_NOTE_BODY: ({ commit, rootState, state }, body) => {
+      const note = Object.assign({}, state.activeNote, { body });
+      if (state.activeNote.id !== state.editingId) {
+        this.SET_RESULT_INDEX(0);
+      }
+      return api
         .updateNote(rootState.auth.user.uid, note.key, moment().toString(), note)
         .then((res) => {
-          const newNote = Object.assign(note, { date_modified: res.date_modified });
+          const newNote = Object.assign({}, note, { date_modified: res.date_modified });
           commit(SET_NOTE, newNote);
-        }),
+        });
+    },
+    UPDATE_NOTE_NAME: ({ commit, rootState, state }, name) => {
+      const note = Object.assign({}, state.activeNote, { name });
+      return api
+        .updateNote(rootState.auth.user.uid, note.key, moment().toString(), note)
+        .then((res) => {
+          const newNote = Object.assign({}, note, { date_modified: res.date_modified });
+          commit(SET_NOTE, newNote);
+        });
+    },
     UPDATE_THEME: ({ commit, rootState }, theme) =>
       api
         .updateTheme(rootState.auth.user.uid, theme)
@@ -91,8 +107,8 @@ const store = {
       state.editingId = editingId;
     },
     [SET_NOTE](state, newNote) {
-      const note = state.notes.find(n => n.key === newNote.key);
-      note.date_modified = newNote.date_modified;
+      const noteIndex = state.notes.findIndex(n => n.key === newNote.key);
+      Vue.set(state.notes, noteIndex, newNote);
     },
     [SET_THEME](state, theme) {
       state.theme = theme;
@@ -112,6 +128,15 @@ const store = {
   },
   getters: {
     activeNote: state => state.activeNote,
+    activeNoteId(state) {
+      return state.activeNote ? state.activeNote.id : -1;
+    },
+    activeNotes(state) {
+      const emptyQuery = state.query.length === 0;
+      const filteredNotes = emptyQuery ?
+        state.notes : utils.filterNotesForQuery(state.query, state.notes);
+      return utils.sortNotes(filteredNotes, !emptyQuery);
+    },
     editingId: state => state.editingId,
     isFullScreen: state => state.isFullScreen,
     notes: state => state.notes,

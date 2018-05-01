@@ -34,15 +34,15 @@
             v-model="password"
             :type="showPassword ? 'text' : 'password'"
             class="auth__input"
-            placeholder="Super, secret"
+            placeholder="Password"
             spellcheck="false"
           >
         </div>
         <button
+          :class="['auth__button', { loading }]"
           :disabled="$v.validationGroup.$invalid || loading"
           @click.prevent="onClickLogIn"
           @keyup.enter="onClickLogIn"
-          class="auth__button"
         >
           {{ loading ? 'Logging In...' : 'Log In' }}
         </button>
@@ -57,7 +57,7 @@
 
       <div class="auth__help">
         <router-link :to="{ name: 'ResetPassword', query: { email: this.email }}">
-          Reset your password
+          Forgot your password?
         </router-link>
       </div>
     </div>
