@@ -1,7 +1,7 @@
 <template>
   <div class="auth">
     <div class="auth__container">
-      <h1 class="auth__title">Log In</h1>
+      <h1 class="auth__title">Welcome Back</h1>
       <form>
         <div
           v-if="error"
@@ -52,12 +52,6 @@
         Need a Notational account?
         <router-link :to="{ name: 'SignUp', query: { email: this.email }}">
           Create an account
-        </router-link>
-      </div>
-
-      <div class="auth__help">
-        <router-link :to="{ name: 'ResetPassword', query: { email: this.email }}">
-          Forgot your password?
         </router-link>
       </div>
     </div>
@@ -126,8 +120,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '../assets/styles/variables';
-  @import '../assets/styles/functions';
-  @import '../assets/styles/mixins';
   @import '../assets/styles/auth';
 </style>

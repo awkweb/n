@@ -6,6 +6,7 @@ import {
   ADD_NOTE,
   DELETE_NOTE,
   INIT_EDITOR,
+  RESET_EDITOR,
   SET_ACTIVE_NOTE,
   SET_EDITING_ID,
   SET_NOTE,
@@ -13,7 +14,6 @@ import {
   SET_QUERY,
   SET_RENAMING_ID,
   SET_RESULT_INDEX,
-  TOGGLE_FULL_SCREEN,
 } from '@/store/constants';
 
 const store = {
@@ -21,7 +21,6 @@ const store = {
     activeNote: null,
     activeNotes: [],
     editingId: null,
-    isFullScreen: false,
     notes: [],
     renamingId: null,
     theme: 'light',
@@ -82,7 +81,7 @@ const store = {
   },
   mutations: {
     [ADD_NOTE](state, note) {
-      Vue.set(state.notes, 0, note);
+      state.notes.splice(0, 1, note);
       state.activeKey = note.key;
       state.activeNote = note;
     },
@@ -100,6 +99,16 @@ const store = {
         });
       state.theme = data.theme;
     },
+    [RESET_EDITOR](state) {
+      state.activeNote = null;
+      state.activeNotes = [];
+      state.editingId = null;
+      state.notes = [];
+      state.renamingId = null;
+      state.theme = 'light';
+      state.query = '';
+      state.resultIndex = -1;
+    },
     [SET_ACTIVE_NOTE](state, note) {
       state.activeNote = note;
     },
@@ -108,7 +117,7 @@ const store = {
     },
     [SET_NOTE](state, newNote) {
       const noteIndex = state.notes.findIndex(n => n.key === newNote.key);
-      Vue.set(state.notes, noteIndex, newNote);
+      state.notes.splice(noteIndex, 1, newNote);
     },
     [SET_THEME](state, theme) {
       state.theme = theme;
@@ -121,9 +130,6 @@ const store = {
     },
     [SET_RESULT_INDEX](state, resultIndex) {
       state.resultIndex = resultIndex;
-    },
-    [TOGGLE_FULL_SCREEN](state) {
-      state.isFullScreen = !state.isFullScreen;
     },
   },
   getters: {
@@ -138,7 +144,6 @@ const store = {
       return utils.sortNotes(filteredNotes, !emptyQuery);
     },
     editingId: state => state.editingId,
-    isFullScreen: state => state.isFullScreen,
     notes: state => state.notes,
     theme: state => state.theme,
     query: state => state.query,

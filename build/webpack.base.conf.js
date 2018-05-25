@@ -60,16 +60,29 @@ module.exports = {
         }
       },
       {
-      test: /\.svg$/,
-        loader: 'vue-svg-loader',
-        options: {
-          svgo: {
-            plugins: [
-              { removeDoctype: true },
-              { removeComments: true }
-            ]
-          }
-        }
+        test: /\.svg$/,
+        oneOf: [
+          {
+            // https://github.com/visualfanatic/vue-svg-loader/issues/27
+            resourceQuery: /inline/, // foo.svg?inline
+            loader: 'vue-svg-loader',
+            options: {
+              svgo: {
+                plugins: [
+                  { removeDoctype: true },
+                  { removeComments: true }
+                ]
+              }
+            }
+          },
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 10000,
+              name: utils.assetsPath('img/[name].[hash:7].[ext]')
+            }
+          },
+        ]
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,

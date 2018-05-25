@@ -125,8 +125,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '../assets/styles/variables';
-  @import '../assets/styles/functions';
-  @import '../assets/styles/mixins';
   @import '../assets/styles/auth';
 </style>

@@ -6,7 +6,6 @@ import Home from '@/pages/Home';
 import Editor from '@/pages/Editor';
 import LogIn from '@/pages/LogIn';
 import NotFound from '@/pages/NotFound';
-import ResetPassword from '@/pages/ResetPassword';
 import Settings from '@/pages/Settings';
 import SignUp from '@/pages/SignUp';
 
@@ -43,13 +42,6 @@ export default new Router({
       name: 'Settings',
       component: Settings,
       beforeEnter: beforeEnterLoggedIn,
-    },
-    {
-      path: '/login/reset',
-      name: 'ResetPassword',
-      component: ResetPassword,
-      beforeEnter: beforeEnterLoggedOut,
-      props: route => ({ email: route.query.email }),
     },
     {
       path: '/login',

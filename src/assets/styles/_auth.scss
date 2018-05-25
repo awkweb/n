@@ -6,6 +6,7 @@
   @include flex-row;
   @include flex-center;
 }
+
 .auth__container {
   margin-top: 4rem;
   max-width: 21rem;
@@ -15,6 +16,7 @@
   }
   width: 100%;
 }
+
 .auth__title {
   text-align: center;
   font: {
@@ -26,6 +28,7 @@
     top: 0;
   }
 }
+
 .auth__message {
   background-color: #f2d2ca;
   border-radius: 4px;
@@ -39,11 +42,13 @@
   padding: .75rem 1rem;
   &.success { background-color: #d9ebe6; }
 }
+
 .auth__field {
   @include flex-column;
   position: relative;
   margin-bottom: 1rem;
 }
+
 .auth__label {
   font: {
     family: $font-sans-serif;
@@ -54,6 +59,7 @@
   position: absolute;
   top: .35rem;
 }
+
 .auth__button-show-password {
   @include button;
   background-color: transparent;
@@ -69,6 +75,7 @@
   right: .55rem;
   top: .35rem;
 }
+
 .auth__input {
   background-color: transparent;
   border: {
@@ -106,6 +113,7 @@
     }
   }
 }
+
 .auth__button {
   @include button;
   background-color: color(light, button-background);
@@ -120,7 +128,7 @@
   font: {
     family: $font-sans-serif;
     size: .9rem;
-    weight: 500;
+    weight: 600;
   }
   height: 2.5rem;
   letter-spacing: .5px;
@@ -154,6 +162,7 @@
     }
   }
 }
+
 .auth__help {
   color: color(light, copy);
   font: {
@@ -168,6 +177,7 @@
   }
   &:last-child { margin-top: .5rem; }
 }
+
 .auth__instructions {
   font: {
     family: $font-sans-serif;

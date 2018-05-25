@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import SearchIcon from '@/assets/icons/search.svg';
+import SearchIcon from '@/assets/icons/search.svg?inline';
 
 export default {
   name: 'EditorSearchField',
@@ -98,7 +98,7 @@ export default {
     top: .75rem;
     transition: {
       duration: $transition-duration;
-      property: fill;
+      property: stroke;
     }
   }
 

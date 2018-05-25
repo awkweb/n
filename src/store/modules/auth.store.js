@@ -5,7 +5,7 @@ import {
 
 const store = {
   state: {
-    user: null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
   },
   actions: {
     FETCH_USER: ({ commit }) =>

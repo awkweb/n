@@ -73,12 +73,18 @@ export default {
       right: .35rem;
     }
   }
+
   .editor-search-info__help {
     .mono {
       background-color: color(light, highlight);
       color: color(light, font);
+      transition: {
+        duration: $transition-duration;
+        property: background, color;
+      }
     }
   }
+
   .mono {
     font: {
       family: $font-mono;

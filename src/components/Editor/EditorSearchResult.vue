@@ -45,8 +45,8 @@
 
 <script>
 import moment from 'moment';
-import DeleteIcon from '@/assets/icons/trash.svg';
-import RenameIcon from '@/assets/icons/pencil.svg';
+import DeleteIcon from '@/assets/icons/trash.svg?inline';
+import RenameIcon from '@/assets/icons/pencil.svg?inline';
 
 export default {
   name: 'EditorSearchResult',
@@ -201,6 +201,7 @@ export default {
       style: solid;
       width: 1px;
     }
+    box-shadow: $box-shadow;
     font: {
       size: .65rem;
       weight: 500;
@@ -213,10 +214,19 @@ export default {
       top: 0;
     }
     transition: {
-      property: border-color;
+      property: all;
       duration: $transition-duration;
     }
-    &:hover { border-color: color(light, input-border-hover); }
+    &:hover {
+      border-color: color(light, input-border-hover);
+      box-shadow: $box-shadow-button-hover;
+      transform: translateY(-1px);
+      .editor-search-result__action-icon { stroke: color(light, font); }
+    }
+    &:active {
+      box-shadow: none;
+      transform: translateY(1px);
+    }
     &:first-child { margin-right: .25rem; }
     &.delete { color: color(light, danger); }
   }
@@ -225,7 +235,7 @@ export default {
     pointer-events: none;
     stroke: color(light, copy);
     transition: {
-      property: fill;
+      property: stroke;
       duration: $transition-duration;
     }
   }
@@ -248,8 +258,14 @@ export default {
     .editor-search-result__action {
       background-color: color(dark, background);
       border-color: color(dark, input-border);
-      color: color(dark, font);
+      &:hover {
+        border-color: color(dark, input-border-hover);
+        .editor-search-result__action-icon { stroke: color(dark, font); }
+      }
       &.delete { color: color(dark, danger); }
+    }
+    .editor-search-result__action-icon {
+      stroke: color(dark, copy);
     }
   }
 </style>

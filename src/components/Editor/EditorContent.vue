@@ -1,13 +1,7 @@
 <template>
   <div
-    :class="['editor-content', { fullscreen: isFullScreen }]"
+    class="editor-content"
   >
-    <button
-      v-if="isFullScreen"
-      class="editor-content__close"
-    >
-      <CloseIcon class="editor-content__close-icon" />
-    </button>
     <textarea
       v-if="activeNote"
       v-model="activeNote.body"
@@ -28,23 +22,14 @@
 </template>
 
 <script>
-import CloseIcon from '@/assets/icons/close.svg';
-
 export default {
   name: 'EditorContent',
-  components: {
-    CloseIcon,
-  },
   props: {
     activeNote: {
       type: Object,
     },
     editingId: {
       type: Number,
-    },
-    isFullScreen: {
-      type: Boolean,
-      required: true,
     },
   },
   methods: {
@@ -67,33 +52,12 @@ export default {
   @import '../../assets/styles/variables';
   @import '../../assets/styles/functions';
   @import '../../assets/styles/mixins';
+
   .editor-content {
     max-height: 23.5rem;
     min-height: 23.5rem;
-    &.fullscreen {
-      background-color: color(light, background);
-      bottom: 0;
-      height: 100%;
-      left: 0;
-      max-height: none;
-      padding: {
-        bottom: 2rem;
-        left: 1rem;
-        right: 1rem;
-        top: 2rem;
-      }
-      position: absolute;
-      right: 0;
-      top: 0;
-      .editor-content__textarea {
-        border: 0;
-        height: 100%;
-        max-height: none;
-        padding: 0;
-        &::-webkit-scrollbar { display: none; }
-      }
-    }
   }
+
   .editor-content__placeholder,
   .editor-content__textarea {
     border: {
@@ -120,6 +84,7 @@ export default {
     }
     width: 100%;
   }
+
   .editor-content__textarea {
     background-color: transparent;
     color: color(light, font);
@@ -128,10 +93,12 @@ export default {
     resize: none;
     &:focus { border-color: color(light, primary); }
   }
+
   .editor-content__placeholder {
     @include flex-row;
     @include flex-center;
   }
+
   .editor-content__close {
     @include flex-row;
     @include flex-center;
@@ -154,6 +121,7 @@ export default {
       .editor-content__close-icon { stroke: color(light, input-border-hover); }
     }
   }
+
   .editor-content__close-icon {
     stroke: color(light, input-border);
   }

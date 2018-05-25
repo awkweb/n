@@ -28,6 +28,7 @@ module.exports = {
     // don't require .vue extension when importing
     'import/extensions': ['error', 'always', {
       js: 'never',
+      svg: 'never', // https://github.com/visualfanatic/vue-svg-loader/issues/27
       vue: 'never'
     }],
     // disallow reassignment of function parameters

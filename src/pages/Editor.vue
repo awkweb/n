@@ -1,26 +1,6 @@
 <template>
-  <div
-    :class="['editor', theme]"
-  >
-    <template
-      v-if="user && !!notes && notes.length >= 0"
-    >
-      <div class="editor__header">
-        <div>
-          <router-link
-            :to="{ name: 'Settings' }"
-            class="editor__header-button"
-          >
-            Settings
-          </router-link>
-          <button
-            @click="onClickLogOut"
-            class="editor__header-button"
-          >
-            Sign Out
-          </button>
-        </div>
-      </div>
+  <div :class="['editor', theme]">
+    <template v-if="user && !!notes && notes.length > 0">
       <EditorSearch
         :activeNoteId="activeNoteId"
         :editingId="editingId"
@@ -39,7 +19,6 @@
       <EditorContent
         :activeNote="activeNote"
         :editingId="editingId"
-        :isFullScreen="isFullScreen"
         @handleOnBlurEditorContent="handleOnBlurEditorContent"
         @handleOnFocusEditorContent="handleOnFocusEditorContent"
         @handleOnInputUpdateBody="handleOnInputUpdateBody"
@@ -48,13 +27,14 @@
       <EditorFooter
         :activeNote="activeNote"
         :theme="theme"
-        @handleOnClickToggleFullScreen="handleOnClickToggleFullScreen"
         @handleOnClickToggleTheme="handleOnClickToggleTheme"
       />
     </template>
+
     <Loader
       v-else
     />
+
     <EditorPrompt
       v-if="deleteNoteKey"
       :loading="editorPromptLoading"
@@ -99,7 +79,6 @@ export default {
       'activeNoteId',
       'activeNotes',
       'editingId',
-      'isFullScreen',
       'notes',
       'renamingId',
       'resultIndex',
@@ -120,6 +99,16 @@ export default {
     Mousetrap.reset();
   },
   methods: {
+    ...mapActions([
+      'CREATE_NOTE',
+      'DELETE_NOTE',
+      'FETCH_USER',
+      'FETCH_USER_DATA',
+      'RESET_ACTIVE_NOTE',
+      'UPDATE_NOTE_BODY',
+      'UPDATE_NOTE_NAME',
+      'UPDATE_THEME',
+    ]),
     ...mapMutations([
       'SET_ACTIVE_NOTE',
       'SET_EDITING_ID',
@@ -127,18 +116,6 @@ export default {
       'SET_RENAMING_ID',
       'SET_RESULT_INDEX',
       'SET_USER',
-      'TOGGLE_FULL_SCREEN',
-    ]),
-    ...mapActions([
-      'CREATE_NOTE',
-      'DELETE_NOTE',
-      'FETCH_USER',
-      'FETCH_USER_DATA',
-      'LOG_OUT_USER',
-      'RESET_ACTIVE_NOTE',
-      'UPDATE_NOTE_BODY',
-      'UPDATE_NOTE_NAME',
-      'UPDATE_THEME',
     ]),
     createNote() {
       this.CREATE_NOTE();
@@ -181,9 +158,6 @@ export default {
     handleOnClickOutside() {
       this.deleteNoteKey = null;
     },
-    handleOnClickToggleFullScreen() {
-      this.TOGGLE_FULL_SCREEN();
-    },
     handleOnClickToggleTheme() {
       const nextTheme = this.theme === 'light' ? 'dark' : 'light';
       this.UPDATE_THEME(nextTheme);
@@ -220,11 +194,6 @@ export default {
           .$refs.EditorContentTextarea
           .focus();
       }
-    },
-    onClickLogOut() {
-      this
-        .LOG_OUT_USER()
-        .finally(() => this.$router.push({ name: 'LogIn' }));
     },
     onKeyPressEscape() {
       if (!this.editingId && !this.renamingId) {
@@ -303,11 +272,6 @@ export default {
         }
       });
       Mousetrap.bind('mod+.', () => this.handleOnClickToggleTheme());
-      Mousetrap.bind('mod+/', () => {
-        if (this.activeNote) {
-          this.TOGGLE_FULL_SCREEN();
-        }
-      });
     },
   },
   metaInfo() {
@@ -325,6 +289,7 @@ export default {
   @import '../assets/styles/variables';
   @import '../assets/styles/functions';
   @import '../assets/styles/mixins';
+
   .editor {
     margin: {
       left: auto;
@@ -336,39 +301,8 @@ export default {
       bottom: 1rem;
       left: 1rem;
       right: 1rem;
-      top: .5rem;
+      top: 1.5rem;
     }
     position: relative;
-  }
-  .editor__header {
-    @include flex-row;
-    align-items: center;
-    justify-content: flex-end;
-    margin-bottom: .25rem;
-  }
-  .editor__header-button {
-    @include button;
-    background-color: transparent;
-    border: 0;
-    color: color(light, copy-light);
-    font: {
-      family: $font-sans-serif;
-      size: .7rem;
-    }
-    margin-right: .25rem;
-    padding: 0;
-    transition: {
-      property: color;
-      duration: $transition-duration;
-    }
-    text-decoration: none;
-    &:hover { color: color(light, primary); }
-    &:last-child { margin-right: 0; }
-  }
-  .editor.dark {
-    .editor__header-button{
-      color: color(dark, copy);
-      &:hover { color: color(dark, primary); }
-    }
   }
 </style>
